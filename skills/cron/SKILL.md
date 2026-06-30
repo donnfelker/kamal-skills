@@ -1,6 +1,6 @@
 ---
 name: cron
-description: Run recurring, scheduled, or cron jobs on a Kamal deployment. Use when the user says "run a cron job," "schedule a recurring task," "nightly job," "hourly job," "periodic task," "set up cron with Kamal," "scheduled jobs," "run cron in a container," or asks how to keep a crontab running on their servers. Covers defining a dedicated `cron` role under the `servers:` key with a `cmd` that loads a `config/crontab` file and runs `cron -f`, and propagating environment variables into the crontab (cron does not pass them through on its own). For configuring web and worker job roles or targeting hosts/roles, see servers-and-roles. For running databases, Redis, or other supporting services, see accessories. For setting `env:` values and secrets the jobs need, see environment-variables.
+description: Run recurring, scheduled, or cron jobs on a Kamal deployment. Use when the user says "run a cron job," "schedule a recurring task," "nightly job," "hourly job," "periodic task," "set up cron with Kamal," "scheduled jobs," "run cron in a container," or asks how to keep a crontab running on their servers. Covers defining a dedicated `cron` role under the `servers:` key with a `cmd` that loads a `config/crontab` file and runs `cron -f`, and propagating environment variables into the crontab (cron does not pass them through on its own). For configuring web and worker job roles or targeting hosts/roles, see servers. For running databases, Redis, or other supporting services, see accessories. For setting `env:` values and secrets the jobs need, see env.
 metadata:
   version: 1.0.0
 ---
@@ -30,7 +30,7 @@ If the project is already set up, read what exists before asking questions:
 
 - **`config/deploy.yml`** — see whether a `servers:` block uses a plain host list or named roles, and whether a `cron` role already exists.
 - **`config/crontab`** — see whether a schedule file is already present.
-- **`.kamal/secrets`** and the `env:` block — note which variables your jobs will need (see [environment-variables](../environment-variables/SKILL.md)).
+- **`.kamal/secrets`** and the `env:` block — note which variables your jobs will need (see [env](../env/SKILL.md)).
 
 ## Step 1: Create config/crontab
 
@@ -63,7 +63,7 @@ servers:
 
 This assumes the cron settings are stored in `config/crontab`.
 
-If your `servers:` block is currently just a plain list of hosts (the implicit `web` role), you will need to convert it to named roles to add `cron` alongside `web`. See [servers-and-roles](../servers-and-roles/SKILL.md).
+If your `servers:` block is currently just a plain list of hosts (the implicit `web` role), you will need to convert it to named roles to add `cron` alongside `web`. See [servers](../servers/SKILL.md).
 
 ### What the boot command does
 
@@ -91,7 +91,7 @@ env:
     - RAILS_MASTER_KEY
 ```
 
-Top-level `env` applies to all roles, including `cron`. You can also set role-specific `env` under the `cron` role. Secrets are read from `.kamal/secrets`. See [environment-variables](../environment-variables/SKILL.md) for the full model.
+Top-level `env` applies to all roles, including `cron`. You can also set role-specific `env` under the `cron` role. Secrets are read from `.kamal/secrets`. See [env](../env/SKILL.md) for the full model.
 
 ## Step 4: Deploy
 
@@ -123,7 +123,7 @@ To inspect the crontab actually installed in the running cron container, reuse i
 kamal app exec --reuse --roles cron 'crontab -l'
 ```
 
-For more on running one-off commands against a role or host, see [servers-and-roles](../servers-and-roles/SKILL.md).
+For more on running one-off commands against a role or host, see [servers](../servers/SKILL.md).
 
 ## Common pitfalls
 
@@ -141,6 +141,6 @@ Official docs: [Cron configuration](https://kamal-deploy.org/docs/configuration/
 ## Related Skills
 
 - **accessories**: For running databases, Redis, search, or other supporting services your scheduled jobs read from or write to.
-- **servers-and-roles**: For converting a plain host list into named roles, configuring the `web` and worker roles, and targeting hosts/roles with `--hosts` and `--roles`.
-- **environment-variables**: For setting the `env:` values and secrets the cron container needs to copy into the crontab.
-- **deploying**: For the overall `kamal deploy` workflow that boots the cron role.
+- **servers**: For converting a plain host list into named roles, configuring the `web` and worker roles, and targeting hosts/roles with `--hosts` and `--roles`.
+- **env**: For setting the `env:` values and secrets the cron container needs to copy into the crontab.
+- **deploy**: For the overall `kamal deploy` workflow that boots the cron role.

@@ -1,6 +1,6 @@
 ---
 name: logging
-description: Configure how logs flow in a Kamal deployment — the Docker logging driver and options for your app containers (the `logging:` key, where `driver` is passed to Docker as `--log-driver` and `options` as `--log-opt`, e.g. `json-file` with `max-size`), and Kamal's own output loggers that ship deploy/command logs to an OpenTelemetry endpoint or write them to a file on disk (the `output:` key, with `otel.endpoint` and `file.path`). Use when the user says things like "configure Docker logging," "set a log driver," "rotate or cap container logs with max-size," "docker logs are filling the disk," "set logging per role," "ship deploy logs to OpenTelemetry/OTel/OTLP," "send Kamal logs to a collector," or "write deploy logs to a file." For viewing running app and accessory logs with `kamal app logs` / `kamal accessory logs`, see app-operations. For where these keys sit in config/deploy.yml alongside other top-level options, see configuration.
+description: Configure how logs flow in a Kamal deployment — the Docker logging driver and options for your app containers (the `logging:` key, where `driver` is passed to Docker as `--log-driver` and `options` as `--log-opt`, e.g. `json-file` with `max-size`), and Kamal's own output loggers that ship deploy/command logs to an OpenTelemetry endpoint or write them to a file on disk (the `output:` key, with `otel.endpoint` and `file.path`). Use when the user says things like "configure Docker logging," "set a log driver," "rotate or cap container logs with max-size," "docker logs are filling the disk," "set logging per role," "ship deploy logs to OpenTelemetry/OTel/OTLP," "send Kamal logs to a collector," or "write deploy logs to a file." For viewing running app and accessory logs with `kamal app logs` / `kamal accessory logs`, see app. For where these keys sit in config/deploy.yml alongside other top-level options, see config.
 metadata:
   version: 1.0.0
 ---
@@ -78,7 +78,7 @@ servers:
 
 ### Viewing the resulting logs
 
-Configuring the driver is separate from reading the logs. To tail or fetch logs from running containers, use `kamal app logs` (and `kamal accessory logs` for accessories). Those runtime commands belong to the **app-operations** skill — see Related Skills.
+Configuring the driver is separate from reading the logs. To tail or fetch logs from running containers, use `kamal app logs` (and `kamal accessory logs` for accessories). Those runtime commands belong to the **app** skill — see Related Skills.
 
 ## Part 2: Output loggers (`output:`)
 
@@ -137,9 +137,9 @@ For the full table with types, examples, and the OTel resource-attribute detail,
 
 - **Confusing the two keys.** `logging:` is for your app's *container* logs (Docker driver/options). `output:` is for *Kamal's own* deploy/command logs (OTel/file). Setting the wrong one won't do what you expect.
 - **Assuming an option works on any driver.** `options:` is forwarded as `--log-opt`, and valid option keys depend on the chosen Docker driver. Check Docker's docs for the driver you picked.
-- **Expecting `logging:` to let you read logs.** It only configures the driver. Viewing logs is a separate runtime command (`kamal app logs`) — see app-operations.
+- **Expecting `logging:` to let you read logs.** It only configures the driver. Viewing logs is a separate runtime command (`kamal app logs`) — see app.
 
 ## Related Skills
 
-- **app-operations**: For viewing logs from running containers with `kamal app logs` (and `kamal accessory logs`), and other day-to-day app management commands.
-- **configuration**: For where `logging:` and `output:` sit in `config/deploy.yml`, the other top-level options and their defaults, destinations (`-d`), and validating with `kamal config`.
+- **app**: For viewing logs from running containers with `kamal app logs` (and `kamal accessory logs`), and other day-to-day app management commands.
+- **config**: For where `logging:` and `output:` sit in `config/deploy.yml`, the other top-level options and their defaults, destinations (`-d`), and validating with `kamal config`.

@@ -1,6 +1,6 @@
 ---
 name: hooks
-description: Write and wire up Kamal deploy hooks — scripts in `.kamal/hooks` (docker-setup, pre-connect, pre-build, pre-deploy, post-deploy, pre-app-boot, post-app-boot, pre-proxy-reboot, post-proxy-reboot) that run at fixed points in a deploy, plus the `KAMAL_*` env vars (`KAMAL_VERSION`, `KAMAL_PERFORMER`, `KAMAL_HOSTS`, `KAMAL_RECORDED_AT`) passed to them for audit reporting, deploy notifications, CI gates, and load-balancer draining. Use when the user says "add a deploy hook," "run a script before/after deploy," "post-deploy notification," "fail the deploy if CI hasn't passed," "block deploys unless I'm on the VPN," "run a script when kamal-proxy reboots," "where do hooks live," "hooks_path," "hooks_output," "skip hooks," or "what are the KAMAL_ env vars." Covers the `.kamal/hooks` folder from `kamal init`, naming rules, non-zero exit aborting the command, `hooks_path`/`hooks_output`, and `--skip-hooks`. For the deploy sequence these fire within, see deploying. For builds, see building-images.
+description: Write and wire up Kamal deploy hooks — scripts in `.kamal/hooks` (docker-setup, pre-connect, pre-build, pre-deploy, post-deploy, pre-app-boot, post-app-boot, pre-proxy-reboot, post-proxy-reboot) that run at fixed points in a deploy, plus the `KAMAL_*` env vars (`KAMAL_VERSION`, `KAMAL_PERFORMER`, `KAMAL_HOSTS`, `KAMAL_RECORDED_AT`) passed to them for audit reporting, deploy notifications, CI gates, and load-balancer draining. Use when the user says "add a deploy hook," "run a script before/after deploy," "post-deploy notification," "fail the deploy if CI hasn't passed," "block deploys unless I'm on the VPN," "run a script when kamal-proxy reboots," "where do hooks live," "hooks_path," "hooks_output," "skip hooks," or "what are the KAMAL_ env vars." Covers the `.kamal/hooks` folder from `kamal init`, naming rules, non-zero exit aborting the command, `hooks_path`/`hooks_output`, and `--skip-hooks`. For the deploy sequence these fire within, see deploy. For builds, see build.
 metadata:
   version: 1.0.0
 ---
@@ -24,7 +24,7 @@ Hooks let you run custom scripts at specific points during Kamal commands.
 - Hooks live in the **`.kamal/hooks`** folder by default. Change the location with `hooks_path` (see [Configuring Location and Output](#configuring-location-and-output)).
 - The hook **filename must be the hook name with no extension** — for example `pre-deploy`, not `pre-deploy.sh` or `pre-deploy.rb`.
 - If a hook script returns a **non-zero exit code, the command is aborted.** This is how a pre-deploy or pre-build hook gates a deploy.
-- Kamal passes `KAMAL_*` environment variables into every hook so the script knows what is happening (see [KAMAL_* Environment Variables](#kamal-environment-variables)).
+- Kamal passes `KAMAL_*` environment variables into every hook so the script knows what is happening (see [KAMAL_* Environment Variables](#kamal-env)).
 - Skip all hooks for one command with `--skip-hooks` (see [Skipping Hooks](#skipping-hooks)).
 
 Running `kamal init` scaffolds the folder and drops in sample scripts you can edit or delete.
@@ -178,7 +178,7 @@ Pass `--skip-hooks` (`-H`) to run a command without its hooks:
 kamal deploy --skip-hooks
 ```
 
-Use it when you need to bypass a gate for a one-off deploy. For how `--skip-hooks` fits into the deploy command's other flags, see the deploying skill.
+Use it when you need to bypass a gate for a one-off deploy. For how `--skip-hooks` fits into the deploy command's other flags, see the deploy skill.
 
 ## Quick Reference
 
@@ -195,5 +195,5 @@ Use it when you need to bypass a gate for a one-off deploy. For how `--skip-hook
 
 ## Related Skills
 
-- **deploying**: For the full `kamal deploy` / `kamal redeploy` sequence these hooks fire within, and the other flags that pair with `--skip-hooks`.
-- **building-images**: For the `kamal build` step where the `pre-connect` and `pre-build` hooks run.
+- **deploy**: For the full `kamal deploy` / `kamal redeploy` sequence these hooks fire within, and the other flags that pair with `--skip-hooks`.
+- **build**: For the `kamal build` step where the `pre-connect` and `pre-build` hooks run.

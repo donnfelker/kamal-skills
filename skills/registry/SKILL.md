@@ -1,6 +1,6 @@
 ---
 name: registry
-description: Configure the Docker registry Kamal pushes your app image to and pulls it from — Docker Hub (the default), AWS ECR, GCP Artifact Registry, a local registry, or any custom/self-hosted registry such as GHCR — and log in or out with `kamal registry login` / `logout`. Use when the user says "set up my Docker registry," "kamal registry login," "configure ECR/GCR/GHCR for Kamal," "where does Kamal push my image," "docker login failed on deploy," "use a private Docker Hub repo," or needs the `registry` block (`server`, `username`, `password`) in `config/deploy.yml` wired to a `KAMAL_REGISTRY_PASSWORD` secret. For building and pushing the image itself, see building-images. For storing the registry password safely, see secrets. For first-time project setup, see getting-started.
+description: Configure the Docker registry Kamal pushes your app image to and pulls it from — Docker Hub (the default), AWS ECR, GCP Artifact Registry, a local registry, or any custom/self-hosted registry such as GHCR — and log in or out with `kamal registry login` / `logout`. Use when the user says "set up my Docker registry," "kamal registry login," "configure ECR/GCR/GHCR for Kamal," "where does Kamal push my image," "docker login failed on deploy," "use a private Docker Hub repo," or needs the `registry` block (`server`, `username`, `password`) in `config/deploy.yml` wired to a `KAMAL_REGISTRY_PASSWORD` secret. For building and pushing the image itself, see build. For storing the registry password safely, see secrets. For first-time project setup, see setup.
 metadata:
   version: 1.0.0
 ---
@@ -150,6 +150,6 @@ For the full subcommand list (`setup`, `remove`, `help`) and example output, see
 
 ## Related Skills
 
-- **building-images**: For building the app image and pushing it to the registry you configure here.
+- **build**: For building the app image and pushing it to the registry you configure here.
 - **secrets**: For storing `KAMAL_REGISTRY_PASSWORD` in `.kamal/secrets` and pulling it from a vault.
-- **getting-started**: For first-time Kamal setup, where the `registry` block is first filled in.
+- **setup**: For first-time Kamal setup, where the `registry` block is first filled in.

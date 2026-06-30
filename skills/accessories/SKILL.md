@@ -1,6 +1,6 @@
 ---
 name: accessories
-description: Run and manage accessory services — databases, Redis, search, and other long-lived dependencies your app needs — through Kamal's `accessories:` configuration and the `kamal accessory` command. Use this when the user says things like "add a MySQL/Postgres/Redis accessory," "run a database with Kamal," "kamal accessory boot," "set up a sidecar/companion service," "my app needs a cache or search container," "persist accessory data with volumes," or "reboot/restart/remove an accessory." Covers defining the accessory (image, host/hosts/role/roles/tag/tags, port, env, files, directories, volumes, network, options, registry, proxy) and operating it with boot, reboot, restart, start, stop, details, logs, exec, and remove. For passing configuration and credentials into accessories, see environment-variables and secrets. For scheduled jobs, see cron.
+description: Run and manage accessory services — databases, Redis, search, and other long-lived dependencies your app needs — through Kamal's `accessories:` configuration and the `kamal accessory` command. Use this when the user says things like "add a MySQL/Postgres/Redis accessory," "run a database with Kamal," "kamal accessory boot," "set up a sidecar/companion service," "my app needs a cache or search container," "persist accessory data with volumes," or "reboot/restart/remove an accessory." Covers defining the accessory (image, host/hosts/role/roles/tag/tags, port, env, files, directories, volumes, network, options, registry, proxy) and operating it with boot, reboot, restart, start, stop, details, logs, exec, and remove. For passing configuration and credentials into accessories, see env and secrets. For scheduled jobs, see cron.
 metadata:
   version: 1.0.0
 ---
@@ -118,7 +118,7 @@ Set environment variables under `env:`. Keep non-sensitive values under `clear:`
         - MYSQL_PASSWORD
 ```
 
-The names under `secret:` are resolved from `.kamal/secrets`. For the full env model (clear vs. secret, aliasing with `SECRET:SOURCE`, tags) see the **environment-variables** and **secrets** skills.
+The names under `secret:` are resolved from `.kamal/secrets`. For the full env model (clear vs. secret, aliasing with `SECRET:SOURCE`, tags) see the **env** and **secrets** skills.
 
 ### 7. Boot the accessory
 
@@ -238,6 +238,6 @@ The same shape works for a Redis cache, a search service, or any other dependenc
 
 ## Related Skills
 
-- **environment-variables**: For the full `env` model — `clear` vs. `secret`, tags, and how variables reach the container.
+- **env**: For the full `env` model — `clear` vs. `secret`, tags, and how variables reach the container.
 - **secrets**: For populating `.kamal/secrets` and fetching credentials (database passwords, registry passwords) from a password manager.
 - **cron**: For running scheduled jobs alongside your app and accessories.

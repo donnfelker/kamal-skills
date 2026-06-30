@@ -31,13 +31,13 @@
     {
       "id": 3,
       "prompt": "How do I make sure my Postgres accessory data survives a container reboot? And where should I put the database password?",
-      "expected_output": "Should explain that durable data must be mounted from the host, using directories (created on the host before mounting) or volumes (not created/copied first), since removing or rebooting a container otherwise loses data. Should show a directories or volumes mapping for the data path. For the password, should use env with the value listed under secret: and resolved from .kamal/secrets, noting secrets are stored in an env file on the host. Should cross-reference the environment-variables and secrets skills.",
+      "expected_output": "Should explain that durable data must be mounted from the host, using directories (created on the host before mounting) or volumes (not created/copied first), since removing or rebooting a container otherwise loses data. Should show a directories or volumes mapping for the data path. For the password, should use env with the value listed under secret: and resolved from .kamal/secrets, noting secrets are stored in an env file on the host. Should cross-reference the env and secrets skills.",
       "assertions": [
         "Recommends a directories or volumes mount for persistence",
         "Explains directories are created on the host before mounting",
         "Distinguishes volumes as not created/copied before mounting",
         "Puts the password under env secret: resolved from .kamal/secrets",
-        "Cross-references environment-variables and/or secrets skills",
+        "Cross-references env and/or secrets skills",
         "Does not invent config keys for persistence"
       ],
       "files": []

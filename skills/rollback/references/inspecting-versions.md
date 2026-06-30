@@ -46,7 +46,7 @@ The `kamal app` command group manages running apps. The subcommands most relevan
 | `kamal app version` | Show app version currently running on servers. |
 | `kamal app stale_containers` | Detect app stale containers. |
 
-For the complete `kamal app` subcommand set (boot, exec, logs, maintenance, live, start, stop, remove, and more), see the app-operations skill.
+For the complete `kamal app` subcommand set (boot, exec, logs, maintenance, live, start, stop, remove, and more), see the app skill.
 
 ## Which Command Answers Which Question
 
@@ -58,4 +58,4 @@ For the complete `kamal app` subcommand set (boot, exec, logs, maintenance, live
 
 ## Pruning Caveat
 
-By default, old containers are pruned after 3 days when you run `kamal deploy`. A rollback works only when the target image/container is still present on the servers (nothing is downloaded from the registry). If `kamal app containers -q` no longer lists the version you want, it has likely been pruned — redeploy that Git version instead (see the deploying skill).
+By default, old containers are pruned after 3 days when you run `kamal deploy`. A rollback works only when the target image/container is still present on the servers (nothing is downloaded from the registry). If `kamal app containers -q` no longer lists the version you want, it has likely been pruned — redeploy that Git version instead (see the deploy skill).

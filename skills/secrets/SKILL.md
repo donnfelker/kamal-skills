@@ -1,6 +1,6 @@
 ---
 name: secrets
-description: Manage secrets for a Kamal deployment — the `.kamal/secrets` file, dotenv variable and command substitution, and the `kamal secrets` vault helpers (1Password, Bitwarden, LastPass, Bitwarden Secrets Manager, AWS Secrets Manager, Doppler, GCP Secret Manager, Passbolt). Use when the user says "kamal secrets," "where do I put my registry password," "manage secrets," "pull secrets from 1Password/Bitwarden/LastPass/Doppler," "kamal secrets fetch/extract/print," "secrets-common," "secrets.<destination>," "secrets_path," "secret vs clear env keys," "RAILS_MASTER_KEY," or "migrate from .env / kamal envify." Covers wiring secrets into `env.secret`/`env.clear` in deploy.yml, per-destination secrets files, and aliased secrets. For setting plain non-secret env values, see environment-variables. For registry login and KAMAL_REGISTRY_PASSWORD, see registry. For build-time secrets and args, see building-images.
+description: Manage secrets for a Kamal deployment — the `.kamal/secrets` file, dotenv variable and command substitution, and the `kamal secrets` vault helpers (1Password, Bitwarden, LastPass, Bitwarden Secrets Manager, AWS Secrets Manager, Doppler, GCP Secret Manager, Passbolt). Use when the user says "kamal secrets," "where do I put my registry password," "manage secrets," "pull secrets from 1Password/Bitwarden/LastPass/Doppler," "kamal secrets fetch/extract/print," "secrets-common," "secrets.<destination>," "secrets_path," "secret vs clear env keys," "RAILS_MASTER_KEY," or "migrate from .env / kamal envify." Covers wiring secrets into `env.secret`/`env.clear` in deploy.yml, per-destination secrets files, and aliased secrets. For setting plain non-secret env values, see env. For registry login and KAMAL_REGISTRY_PASSWORD, see registry. For build-time secrets and args, see build.
 metadata:
   version: 1.0.0
 ---
@@ -60,7 +60,7 @@ env:
 
 The names under `secret` must match variables defined in `.kamal/secrets`.
 
-**Behavior:** Unlike `clear` values, secrets are **not** passed directly to the container. Kamal writes them to an env file on the host instead. For the full breakdown of `clear`, `secret`, and tags, see the **environment-variables** skill.
+**Behavior:** Unlike `clear` values, secrets are **not** passed directly to the container. Kamal writes them to an env file on the host instead. For the full breakdown of `clear`, `secret`, and tags, see the **env** skill.
 
 ### Aliased Secrets
 
@@ -198,8 +198,8 @@ servers:
 
 ## Related Skills
 
-- **environment-variables**: For setting plain (non-secret) env values, the `clear` / `secret` keys in detail, and tags.
+- **env**: For setting plain (non-secret) env values, the `clear` / `secret` keys in detail, and tags.
 - **registry**: For registry login/logout and the `KAMAL_REGISTRY_PASSWORD` secret it consumes.
-- **building-images**: For build-time secrets and build args used while building your image.
+- **build**: For build-time secrets and build args used while building your image.
 
 **Official docs:** [Secrets command](https://kamal-deploy.org/docs/commands/secrets/) · [Secrets changes (upgrading)](https://kamal-deploy.org/docs/upgrading/secrets-changes/) · [Environment variables](https://kamal-deploy.org/docs/configuration/environment-variables/)

@@ -1,6 +1,6 @@
 ---
 name: remove
-description: Tear down a Kamal deployment with `kamal remove` — it removes the kamal-proxy, app, and accessory containers from your servers and logs out of the Docker registry, prompting for confirmation unless you pass `-y`. Covers full teardown plus removing components piece by piece with `kamal app remove`, `kamal accessory remove [NAME]`, `kamal proxy remove`, and `kamal registry logout`, and scoping a teardown to one environment with `-d/--destination`. Use when the user says "remove my deployment," "tear down the app," "kamal remove," "decommission this server," "uninstall Kamal from these hosts," "delete the proxy and accessory containers," "clean up the staging deploy," "nuke my Kamal setup," or "log out of the registry on my servers." For deploying or redeploying, see deploying. For managing running app containers, see app-operations. For accessory lifecycle and data, see accessories. For the kamal-proxy container, see proxy.
+description: Tear down a Kamal deployment with `kamal remove` — it removes the kamal-proxy, app, and accessory containers from your servers and logs out of the Docker registry, prompting for confirmation unless you pass `-y`. Covers full teardown plus removing components piece by piece with `kamal app remove`, `kamal accessory remove [NAME]`, `kamal proxy remove`, and `kamal registry logout`, and scoping a teardown to one environment with `-d/--destination`. Use when the user says "remove my deployment," "tear down the app," "kamal remove," "decommission this server," "uninstall Kamal from these hosts," "delete the proxy and accessory containers," "clean up the staging deploy," "nuke my Kamal setup," or "log out of the registry on my servers." For deploying or redeploying, see deploy. For managing running app containers, see app. For accessory lifecycle and data, see accessories. For the kamal-proxy container, see proxy.
 metadata:
   version: 1.0.0
 ---
@@ -123,7 +123,7 @@ For the complete subcommand listings (including `kamal registry remove`) and eve
 
 ## Related Skills
 
-- **deploying**: For building and shipping deployments with `kamal deploy` / `kamal redeploy` — the inverse of tearing one down.
-- **app-operations**: For managing running app containers (logs, exec, start/stop) with `kamal app` instead of removing them.
+- **deploy**: For building and shipping deployments with `kamal deploy` / `kamal redeploy` — the inverse of tearing one down.
+- **app**: For managing running app containers (logs, exec, start/stop) with `kamal app` instead of removing them.
 - **accessories**: For configuring, booting, and persisting accessory data — and exactly what `kamal accessory remove` deletes.
 - **proxy**: For configuring and operating kamal-proxy, including `kamal proxy reboot` and `kamal proxy remove`.

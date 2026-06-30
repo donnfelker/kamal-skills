@@ -30,13 +30,13 @@
     {
       "id": 3,
       "prompt": "My Kamal cron jobs run but they can't see my environment variables — DATABASE_URL and RAILS_MASTER_KEY come up empty inside the cron jobs. What's wrong?",
-      "expected_output": "Should explain that cron does not automatically propagate environment variables. Should point out that the boot command's `(env && cat config/crontab)` portion is what copies the container's environment into the crontab as NAME=value lines, and that dropping it is a common cause. Should confirm the needed variables are actually present in the container via the `env:` config (clear/secret, with secrets from .kamal/secrets), since `env` can only copy variables that already exist in the container. Should cross-reference environment-variables.",
+      "expected_output": "Should explain that cron does not automatically propagate environment variables. Should point out that the boot command's `(env && cat config/crontab)` portion is what copies the container's environment into the crontab as NAME=value lines, and that dropping it is a common cause. Should confirm the needed variables are actually present in the container via the `env:` config (clear/secret, with secrets from .kamal/secrets), since `env` can only copy variables that already exist in the container. Should cross-reference env.",
       "assertions": [
         "States that cron does not automatically propagate environment variables",
         "Explains the (env && cat config/crontab) part copies env vars into the crontab",
         "Checks that the variables are configured under env: so the container has them",
         "Notes secrets come from .kamal/secrets",
-        "Cross-references the environment-variables skill"
+        "Cross-references the env skill"
       ],
       "files": []
     },
@@ -67,13 +67,13 @@
     {
       "id": 6,
       "prompt": "My deploy.yml has servers as a plain list of IP addresses. How do I add a cron container alongside my web app?",
-      "expected_output": "Should explain that a plain list of servers is implicitly the `web` role, and that adding cron requires converting `servers:` to named roles so `web` and `cron` can coexist. Should show the `cron` role with `hosts` and the boot command. Should note the cron role is non-primary and does not sit behind the proxy by default. Should cross-reference servers-and-roles for converting host lists into named roles.",
+      "expected_output": "Should explain that a plain list of servers is implicitly the `web` role, and that adding cron requires converting `servers:` to named roles so `web` and `cron` can coexist. Should show the `cron` role with `hosts` and the boot command. Should note the cron role is non-primary and does not sit behind the proxy by default. Should cross-reference servers for converting host lists into named roles.",
       "assertions": [
         "Explains a plain server list is the implicit web role",
         "Converts servers: to named roles to add cron alongside web",
         "Shows the cron role with hosts and the cron boot command",
         "Notes the cron role is non-primary / not behind the proxy by default",
-        "Cross-references the servers-and-roles skill"
+        "Cross-references the servers skill"
       ],
       "files": []
     },

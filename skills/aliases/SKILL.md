@@ -1,6 +1,6 @@
 ---
 name: aliases
-description: Define custom command aliases under the top-level `aliases` key in `config/deploy.yml` so a long, repeated `kamal` invocation becomes a single `kamal <name>`. Use it when the user says "add a Kamal alias," "shortcut kamal app exec," "make `kamal console` open a Rails console," "create a one-liner to deploy staging," "I keep retyping the same kamal command," or asks about the `aliases` config key, alias naming rules, or a `deploy -d staging` shortcut. Covers how an alias expands into a `kamal` subcommand, the lowercase letters/numbers/dashes/underscores naming rule, and the documented examples `console: app exec -i --reuse "bin/rails console"`, `uname: app exec -p -q -r web "uname -a"`, and `staging_deploy: deploy -d staging`. For the rest of `config/deploy.yml` and DRYing it up with YAML anchors, see configuration. For the underlying app exec / console / logs commands the aliases wrap, see app-operations.
+description: 'Define custom command aliases under the top-level `aliases` key in `config/deploy.yml` so a long, repeated `kamal` invocation becomes a single `kamal <name>`. Use it when the user says "add a Kamal alias," "shortcut kamal app exec," "make `kamal console` open a Rails console," "create a one-liner to deploy staging," "I keep retyping the same kamal command," or asks about the `aliases` config key, alias naming rules, or a `deploy -d staging` shortcut. Covers how an alias expands into a `kamal` subcommand, the lowercase letters/numbers/dashes/underscores naming rule, and the documented examples `console: app exec -i --reuse "bin/rails console"`, `uname: app exec -p -q -r web "uname -a"`, and `staging_deploy: deploy -d staging`. For the rest of `config/deploy.yml` and DRYing it up with YAML anchors, see config. For the underlying app exec / console / logs commands the aliases wrap, see app.'
 metadata:
   version: 1.0.0
 ---
@@ -122,5 +122,5 @@ For the official documentation, see [Aliases](https://kamal-deploy.org/docs/conf
 
 ## Related Skills
 
-- **configuration**: For the rest of `config/deploy.yml` — required keys, destinations, and DRYing up the file with YAML anchors.
-- **app-operations**: For the underlying commands aliases wrap — `kamal app exec`, opening a console, and running commands on servers.
+- **config**: For the rest of `config/deploy.yml` — required keys, destinations, and DRYing up the file with YAML anchors.
+- **app**: For the underlying commands aliases wrap — `kamal app exec`, opening a console, and running commands on servers.

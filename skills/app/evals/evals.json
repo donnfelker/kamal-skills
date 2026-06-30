@@ -1,0 +1,90 @@
+{
+  "skill_name": "app",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Show me what containers are currently running across all my servers.",
+      "expected_output": "Should recommend `kamal details` to show details of all containers (proxy, app, and accessory containers) grouped by host. For just the app, should mention `kamal app containers` (show app containers on servers) and `kamal app details` (show details about app containers). May suggest reading config/deploy.yml to confirm which hosts and roles are in play. Should not invent flags or output fields that aren't in the Kamal docs.",
+      "assertions": [
+        "Recommends `kamal details` for all containers across hosts",
+        "Mentions `kamal app containers` and/or `kamal app details` for app-only containers",
+        "Describes details as grouped by host / per server",
+        "Does not invent flags or behaviors not in the Kamal docs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "i need to put the site into maintenance mode while i run a migration, then bring it back",
+      "expected_output": "Should give `kamal app maintenance` to enter maintenance mode and explain that kamal-proxy intercepts requests and returns 503 responses using a built-in HTML error page. Should mention customizing the page text with `kamal app maintenance --message \"...\"`. Should mention that custom error pages can be served via the `error_pages_path` config option. Should give `kamal app live` to return the app to live mode afterward.",
+      "assertions": [
+        "Recommends `kamal app maintenance` to enter maintenance mode",
+        "Explains kamal-proxy returns 503 responses",
+        "Mentions the `--message` option to customize the maintenance message",
+        "Mentions `error_pages_path` for custom error pages",
+        "Recommends `kamal app live` to return to live mode"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "how do i open a rails console on the server?",
+      "expected_output": "Should recommend `kamal app exec -i 'bin/rails console'` (or `--interactive`), which runs interactively over SSH in a new container made from the most recent app image. Should note the interactive command defaults to the primary host and that `--hosts` connects to another. Should mention `--reuse` to run in the currently running container instead of a fresh one. Should not fabricate other flags.",
+      "assertions": [
+        "Recommends `kamal app exec -i` / `--interactive` with `bin/rails console`",
+        "Notes the interactive session defaults to the primary host",
+        "Mentions `--hosts` to target a different host",
+        "Mentions `--reuse` to use the currently running container",
+        "Does not invent unsupported flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Run `ruby -v` on every server, and then check `.ruby-version` only on the primary.",
+      "expected_output": "For all servers: `kamal app exec 'ruby -v'`. For the primary only: `kamal app exec --primary 'cat .ruby-version'` or the short form `kamal app exec -p 'cat .ruby-version'`. Should explain `kamal app exec` runs the command inside the app container on the servers, and that `--primary`/`-p` restricts it to the primary host.",
+      "assertions": [
+        "Uses `kamal app exec 'ruby -v'` to run on all servers",
+        "Uses `kamal app exec --primary` or `-p` for the primary-only command",
+        "Explains exec runs inside the app container on the servers",
+        "Correctly maps `-p` to `--primary`"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "who deployed last and when? i want to see the history of what's been run on the boxes",
+      "expected_output": "Should recommend `kamal audit`, which shows the latest commands run on each server. Should explain it tails `.kamal/app-audit.log` on each host and returns a per-server timeline with timestamped events such as pushed env files, pulled image, booted app version, tagging the latest image, and pruned containers/images. Should not claim audit shows information beyond what is in that log.",
+      "assertions": [
+        "Recommends `kamal audit`",
+        "Explains it shows the latest commands run on each server",
+        "Mentions the per-server `.kamal/app-audit.log` timeline",
+        "References grounded event examples (e.g. booted app version, pulled image, pruned containers)"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "What's the difference between `kamal app version` and `kamal version`?",
+      "expected_output": "Should explain that `kamal app version` shows the app version currently running on the servers (the deployed app), while `kamal version` returns the version of the Kamal CLI you have installed (e.g. 2.12.0). Should make clear these answer different questions and should not conflate them.",
+      "assertions": [
+        "`kamal app version` = app version currently running on servers",
+        "`kamal version` = installed Kamal CLI version (e.g. 2.12.0)",
+        "Clearly distinguishes the deployed app version from the Kamal CLI version"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Before I run a command I want to double-check the config Kamal will actually use — roles, hosts, and the image it'll deploy. How?",
+      "expected_output": "Should recommend `kamal config`, which displays the resolved config including roles, hosts, primary_host, version, repository, absolute_image, service_with_version, and builder/accessories/logging settings. Should frame it as confirming what a command will target before running it. Should not invent config keys beyond those shown in the Kamal config output.",
+      "assertions": [
+        "Recommends `kamal config`",
+        "Mentions it shows resolved roles, hosts, and the image/version to deploy (e.g. absolute_image)",
+        "Frames it as verifying targets before running a command",
+        "Does not invent config keys not present in the Kamal docs"
+      ],
+      "files": []
+    }
+  ]
+}
