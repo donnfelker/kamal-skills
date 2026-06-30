@@ -194,7 +194,7 @@ See `README.md` for the current list of skills organized by category. When addin
 
 ## Claude Code-Specific Enhancements
 
-These patterns are **Claude Code only** and must not be added to `SKILL.md` files directly, as skills are designed to be cross-agent compatible (Codex, Cursor, Windsurf, etc.). Apply them locally in your own project's `.claude/skills/` overrides instead.
+These patterns are **Claude Code only** and must not be added to `SKILL.md` files directly, as skills are designed to be cross-agent compatible (Codex, Cursor, GitHub Copilot, etc.). Apply them locally in your own project's `.claude/skills/` overrides instead.
 
 ### Dynamic content injection with `!`command``
 

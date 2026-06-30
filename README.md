@@ -4,7 +4,7 @@ A collection of AI agent skills for deploying and operating applications with [K
 
 Every skill is **grounded in the official Kamal documentation** at [kamal-deploy.org](https://kamal-deploy.org) — no invented commands, flags, config keys, defaults, or behaviors.
 
-Works with Claude Code, OpenAI Codex, Cursor, Windsurf, and any agent that supports the [Agent Skills spec](https://agentskills.io).
+Works with Claude Code, OpenAI Codex, Cursor, GitHub Copilot, and any agent that supports the [Agent Skills spec](https://agentskills.io).
 
 Built by [Donn Felker](https://donnfelker.com).
 
@@ -52,7 +52,7 @@ Preview whether any command would be blocked with `dcg test "<command>"` or `dcg
 
 Skills are markdown files that give AI agents specialized knowledge and workflows for specific tasks. When you add these to your project, your agent can recognize when you're working on a Kamal deployment task and apply the right commands, configuration, and best practices — straight from the official docs.
 
-Because they follow the cross-agent [Agent Skills spec](https://agentskills.io), the same skills work across Claude Code, Codex, Cursor, Windsurf, and other compatible agents.
+Because they follow the cross-agent [Agent Skills spec](https://agentskills.io), the same skills work across Claude Code, Codex, Cursor, GitHub Copilot, and other compatible agents.
 
 ## Available Skills
 
