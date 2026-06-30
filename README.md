@@ -59,26 +59,26 @@ Because they follow the cross-agent [Agent Skills spec](https://agentskills.io),
 <!-- SKILLS:START -->
 | Skill | Description |
 |-------|-------------|
-| [getting-started](skills/getting-started/) | Install Kamal and ship your first deploy on a new project. Use when the user is starting with Kamal for the first time... |
-| [configuration](skills/configuration/) | Understand and write your Kamal configuration in config/deploy.yml. Use when the user says "set up config/deploy.yml,"... |
-| [deploying](skills/deploying/) | Run Kamal deploys end to end — a full `kamal deploy` (build, push, pull, boot, health-check on GET /up, zero-downtime... |
-| [building-images](skills/building-images/) | Configure Kamal builders and build then push your app image. Use this skill when the user wants to set up the `builder`... |
-| [rollback](skills/rollback/) | Roll back a Kamal deployment to a previous image when a release goes bad, and identify or check which versions are... |
-| [servers-and-roles](skills/servers-and-roles/) | Define and structure the servers Kamal deploys to — a simple list of hosts, multiple custom roles (such as web and... |
-| [environment-variables](skills/environment-variables/) | Configure environment variables in your Kamal deploy.yml — the `env` block with `clear` values, `secret` references... |
-| [secrets](skills/secrets/) | Manage secrets for a Kamal deployment — the `.kamal/secrets` file, dotenv variable and command substitution, and the... |
-| [registry](skills/registry/) | Configure the Docker registry Kamal pushes your app image to and pulls it from — Docker Hub (the default), AWS ECR, GCP... |
-| [proxy](skills/proxy/) | Configure and operate kamal-proxy, the reverse proxy that gives Kamal zero-downtime deploys on ports 80 and 443. Use... |
 | [accessories](skills/accessories/) | Run and manage accessory services — databases, Redis, search, and other long-lived dependencies your app needs —... |
-| [ssh](skills/ssh/) | Configure how Kamal connects to servers over SSH and tune SSHKit connection handling. Use when the user sets the SSH `user`... |
-| [cron](skills/cron/) | Run recurring, scheduled, or cron jobs on a Kamal deployment. Use when the user says "run a cron job," "schedule a... |
-| [booting](skills/booting/) | Control how Kamal boots new containers across many servers during a deploy — rolling the release out in batches... |
-| [logging](skills/logging/) | Configure how logs flow in a Kamal deployment — the Docker logging driver and options for your app containers (the... |
-| [app-operations](skills/app-operations/) | Operate and inspect already-running Kamal apps without redeploying. Manage app containers with `kamal app` (boot,... |
-| [hooks](skills/hooks/) | Write and wire up Kamal deploy hooks — scripts in `.kamal/hooks` (docker-setup, pre-connect, pre-build, pre-deploy,... |
-| [pruning](skills/pruning/) | Prune old Kamal containers and images and control how many Kamal keeps around. Kamal retains the last 5 deployed... |
 | [aliases](skills/aliases/) | Define custom command aliases under the top-level `aliases` key in `config/deploy.yml` so a long, repeated `kamal`... |
+| [app-operations](skills/app-operations/) | Operate and inspect already-running Kamal apps without redeploying. Manage app containers with `kamal app` (boot,... |
+| [booting](skills/booting/) | Control how Kamal boots new containers across many servers during a deploy — rolling the release out in batches instead... |
+| [building-images](skills/building-images/) | Configure Kamal builders and build then push your app image. Use this skill when the user wants to set up the `builder`... |
+| [configuration](skills/configuration/) | Understand and write your Kamal configuration in config/deploy.yml. Use when the user says "set up config/deploy.yml,"... |
+| [cron](skills/cron/) | Run recurring, scheduled, or cron jobs on a Kamal deployment. Use when the user says "run a cron job," "schedule a... |
+| [deploying](skills/deploying/) | Run Kamal deploys end to end — a full `kamal deploy` (build, push, pull, boot, health-check on GET /up, zero-downtime... |
+| [environment-variables](skills/environment-variables/) | Configure environment variables in your Kamal deploy.yml — the `env` block with `clear` values, `secret` references... |
+| [getting-started](skills/getting-started/) | Install Kamal and ship your first deploy on a new project. Use when the user is starting with Kamal for the first time... |
+| [hooks](skills/hooks/) | Write and wire up Kamal deploy hooks — scripts in `.kamal/hooks` (docker-setup, pre-connect, pre-build, pre-deploy,... |
+| [logging](skills/logging/) | Configure how logs flow in a Kamal deployment — the Docker logging driver and options for your app containers (the... |
+| [proxy](skills/proxy/) | Configure and operate kamal-proxy, the reverse proxy that gives Kamal zero-downtime deploys on ports 80 and 443. Use... |
+| [pruning](skills/pruning/) | Prune old Kamal containers and images and control how many Kamal keeps around. Kamal retains the last 5 deployed... |
+| [registry](skills/registry/) | Configure the Docker registry Kamal pushes your app image to and pulls it from — Docker Hub (the default), AWS ECR, GCP... |
 | [remove](skills/remove/) | Tear down a Kamal deployment with `kamal remove` — it removes the kamal-proxy, app, and accessory containers from your... |
+| [rollback](skills/rollback/) | Roll back a Kamal deployment to a previous image when a release goes bad, and identify or check which versions are... |
+| [secrets](skills/secrets/) | Manage secrets for a Kamal deployment — the `.kamal/secrets` file, dotenv variable and command substitution, and the... |
+| [servers-and-roles](skills/servers-and-roles/) | Define and structure the servers Kamal deploys to — a simple list of hosts, multiple custom roles (such as web and... |
+| [ssh](skills/ssh/) | Configure how Kamal connects to servers over SSH and tune SSHKit connection handling. Use when the user sets the SSH... |
 | [upgrading](skills/upgrading/) | Walk through upgrading an existing Kamal 1.x project to Kamal 2.0 with `kamal upgrade` — the move from Traefik to... |
 <!-- SKILLS:END -->
 
