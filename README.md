@@ -16,7 +16,7 @@ Run into a problem or have a question? [Open an issue](https://github.com/donnfe
 
 These skills let an AI agent run **real Kamal commands against your servers**, including destructive ones — `kamal remove` (tears down the proxy, app, and accessories), `kamal app remove`, and `kamal prune`. Before you let an agent loose on a live deployment, install **[Destructive Command Guard (`dcg`)](https://github.com/Dicklesworthstone/destructive_command_guard)** and enable the `platform.kamal` pack so it can't accidentally destroy your deployment.
 
-> [!WARNING]
+> [!IMPORTANT]
 > `dcg` is a hook that blocks destructive commands before they execute. The `platform.kamal` pack adds Kamal-specific guards on top — a few minutes of setup that can save a production environment.
 
 **1. Install dcg:**
