@@ -72,7 +72,7 @@
     {
       "id": 6,
       "prompt": "Where exactly do aliases go in my deploy config, and how does kamal know what to run when I type the alias?",
-      "expected_output": "Should explain aliases are defined at the root of config/deploy.yml under the aliases key. Should explain the alias value is everything you would type after kamal, and that kamal <name> expands to and runs that command. Should illustrate with a documented example like console expanding to app exec -i --reuse \"bin/rails console\". May point to the configuration skill for the surrounding config file. Must not claim undocumented expansion behavior.",
+      "expected_output": "Should explain aliases are defined at the root of config/deploy.yml under the aliases key. Should explain the alias value is everything you would type after kamal, and that kamal <name> expands to and runs that command. Should illustrate with a documented example like console expanding to app exec -i --reuse \"bin/rails console\". May point to the config skill for the surrounding config file. Must not claim undocumented expansion behavior.",
       "assertions": [
         "States aliases sit at the root of config/deploy.yml under the aliases key",
         "Explains the value is the command text following kamal",

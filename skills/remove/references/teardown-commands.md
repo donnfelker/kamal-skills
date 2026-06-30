@@ -51,7 +51,7 @@ From `kamal app` (manage your running apps):
 |------------|--------------|
 | `kamal app remove` | Remove app containers and images from servers |
 
-For the rest of `kamal app` (containers, details, exec, images, logs, start, stop, version, maintenance/live mode), see the **app-operations** skill.
+For the rest of `kamal app` (containers, details, exec, images, logs, start, stop, version, maintenance/live mode), see the **app** skill.
 
 ### `kamal accessory remove [NAME]`
 

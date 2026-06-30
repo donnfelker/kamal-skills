@@ -1,0 +1,98 @@
+{
+  "skill_name": "config",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm setting up config/deploy.yml for the first time. What are the required keys and what's the bare minimum to get started?",
+      "expected_output": "Should suggest checking for an existing config/deploy.yml first, and offer kamal init to generate config/deploy.yml plus the .kamal/secrets file and sample hooks in .kamal/hooks. Should identify service as the required value used as the container name prefix. Should explain image is the Docker image name pushed to the configured registry, and mention servers, registry, and env as the blocks needed to actually deploy. Should recommend running kamal config to render the resolved configuration. Must not invent keys or defaults.",
+      "assertions": [
+        "Mentions kamal init creates config/deploy.yml, .kamal/secrets, and sample hooks in .kamal/hooks",
+        "Identifies service as the required key used as the container name prefix",
+        "Describes image as the Docker image name pushed to the configured registry",
+        "References servers and env blocks for a working deploy",
+        "Recommends kamal config to display the resolved config",
+        "Does not invent configuration keys or defaults"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "We deploy to both production and staging. How do I set up a staging destination so I can run kamal deploy -d staging?",
+      "expected_output": "Should explain that passing -d staging makes Kamal also read config/deploy.staging.yml and merge it with the base config/deploy.yml. Should show a base file plus an overlay file. Should note that secrets follow the destination: Kamal looks for .kamal/secrets-common first, then .kamal/secrets.staging, with later files overriding earlier ones. May mention require_destination: true to force a destination on every command. Must not invent merge behaviors beyond what the docs state.",
+      "assertions": [
+        "Explains the -d flag reads config/deploy.staging.yml and merges it with the base config",
+        "Shows a base config plus a per-destination overlay file",
+        "Mentions destination secrets resolve as secrets-common then secrets.<destination> with later overriding earlier",
+        "Mentions require_destination to make a destination mandatory",
+        "Does not fabricate undocumented merge semantics"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "my deploy.yml has the same healthcheck block copy-pasted across three worker roles. how do I DRY this up?",
+      "expected_output": "Should recommend YAML anchors and aliases. Should explain anchors begin with x- and are defined at the root level of deploy.yml so Kamal treats them as ignored extensions. Should show defining the block with an x- key and an &anchor, then referencing it with <<: *anchor under a role's options. Should tie this to the fact that Kamal rejects unrecognized keys, which is why the x- prefix is required.",
+      "assertions": [
+        "Recommends YAML anchors and aliases",
+        "States anchors begin with x- and are defined at the root level",
+        "Shows &anchor definition under an x- key",
+        "Shows referencing the anchor with <<: *anchor inside role options",
+        "Explains x- is needed because Kamal rejects unrecognized keys"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "What does retain_containers do and what's its default? Also I keep getting an error about an unknown key in my config.",
+      "expected_output": "Should explain retain_containers controls how many old containers and images Kamal retains, defaulting to 5. Should explain the unknown-key error comes from Kamal not accepting unrecognized keys, and that the supported workaround for intentional custom blocks is the x- extension prefix, which Kamal ignores without raising an error. Should not invent other defaults.",
+      "assertions": [
+        "States retain_containers sets how many old containers and images are retained",
+        "States the default is 5",
+        "Explains Kamal does not accept unrecognized keys",
+        "Explains x- prefixed sections are ignored as extensions and avoid the error",
+        "Does not invent unrelated defaults or keys"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Can you walk me through the top-level options I might want to tune — things like readiness delay, primary role, and timeouts — and their defaults?",
+      "expected_output": "Should list grounded top-level options with correct defaults: primary_role (web), readiness_delay (7 seconds, only for containers with no proxy and no healthcheck), deploy_timeout (30), drain_timeout (30), retain_containers (5), minimum_version (nil). May reference stop_timeout defaulting to drain_timeout for non-proxied roles and 10s for proxied roles. Should point to the full key reference for the complete list. Every default stated must match the docs.",
+      "assertions": [
+        "Lists primary_role with default web",
+        "States readiness_delay default 7 and that it applies only to containers with no proxy and no healthcheck",
+        "States deploy_timeout and drain_timeout defaults of 30",
+        "States retain_containers default 5",
+        "Does not state any incorrect default",
+        "Points to a full reference for the complete key list"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "How are secrets and hooks paths configured, and can I change where they live?",
+      "expected_output": "Should explain secrets_path defaults to .kamal/secrets and that Kamal looks for <secrets_path>-common first, then <secrets_path> (or <secrets_path>.<destination> with destinations), with later files overriding earlier ones. Should explain hooks_path defaults to .kamal/hooks. Should note these are overridable by setting the keys. Should cross-reference the env skill for the contents of secrets rather than inventing secret formats here.",
+      "assertions": [
+        "States secrets_path default is .kamal/secrets",
+        "Explains secrets-common is read before the main secrets file with later overriding earlier",
+        "States hooks_path default is .kamal/hooks",
+        "Notes both paths can be overridden via their config keys",
+        "Cross-references env for secret contents"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "How do I add command shortcuts like a one-liner to deploy staging or open a console?",
+      "expected_output": "Should explain the top-level aliases key defines shortcuts for Kamal commands and is configured in config/deploy.yml. May show an example such as staging_deploy: deploy -d staging or a console alias. Should cross-reference the aliases skill for the full pattern rather than inventing alias syntax beyond what the docs show.",
+      "assertions": [
+        "Identifies the top-level aliases key for command shortcuts",
+        "Shows a grounded example such as a deploy -d staging or console alias",
+        "Notes aliases live in config/deploy.yml",
+        "Cross-references the aliases skill",
+        "Does not invent alias syntax beyond the docs"
+      ],
+      "files": []
+    }
+  ]
+}

@@ -81,4 +81,4 @@ The aliases above are assembled from documented commands and flags.
 
 - An alias value is substituted verbatim after `kamal`, so quote multi-word commands the same way you would on the command line — e.g. `"bin/rails console"`.
 - Keep alias names stable; teammates and scripts will rely on `kamal <name>`.
-- For the interactive `app exec` commands above (consoles and shells), see the app-operations skill. For where the `aliases` key sits among the other config options, see the configuration skill.
+- For the interactive `app exec` commands above (consoles and shells), see the app skill. For where the `aliases` key sits among the other config options, see the config skill.

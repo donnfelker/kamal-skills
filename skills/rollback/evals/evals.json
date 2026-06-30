@@ -41,12 +41,12 @@
     {
       "id": 4,
       "prompt": "I shipped a bad release about 10 days ago that I now realize I want to revert to a build from before that. Can I just roll back to it?",
-      "expected_output": "Should warn that old containers are pruned by default after 3 days when you run `kamal deploy`, so a build that old has very likely been pruned and is no longer on the servers. Should explain that rollback only works when the target image/container is still present (nothing is downloaded from the registry). Should recommend checking `kamal app containers -q` to see what is actually still available, and if the target is gone, redeploying that Git version instead (deploying skill).",
+      "expected_output": "Should warn that old containers are pruned by default after 3 days when you run `kamal deploy`, so a build that old has very likely been pruned and is no longer on the servers. Should explain that rollback only works when the target image/container is still present (nothing is downloaded from the registry). Should recommend checking `kamal app containers -q` to see what is actually still available, and if the target is gone, redeploying that Git version instead (deploy skill).",
       "assertions": [
         "Warns that old containers are pruned after 3 days by default on `kamal deploy`",
         "Explains rollback needs the target image/container still present on the servers",
         "Recommends `kamal app containers -q` to confirm what is still available",
-        "Suggests redeploying the version (deploying skill) if it has been pruned"
+        "Suggests redeploying the version (deploy skill) if it has been pruned"
       ],
       "files": []
     },

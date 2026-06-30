@@ -1,6 +1,6 @@
 ---
 name: proxy
-description: Configure and operate kamal-proxy, the reverse proxy that gives Kamal zero-downtime deploys on ports 80 and 443. Use when the user wants to route a domain (host/hosts), enable automatic HTTPS via Let's Encrypt (ssl), point the proxy at their app's port (app_port), tune the deploy healthcheck (/up), or adjust response_timeout and buffering — and when they say things like "configure the kamal proxy," "set up SSL for my domain," "add my custom domain," "the proxy isn't routing," "reboot the proxy," "upgrade kamal-proxy," or run kamal proxy boot/reboot/start/stop/details/logs. Covers the proxy config block and the kamal proxy command. For full deploys, see deploying. For enabling the proxy per role, see servers-and-roles. For starting and stopping the app container, see app-operations. For migrating from Kamal 1.x to kamal-proxy, see upgrading.
+description: Configure and operate kamal-proxy, the reverse proxy that gives Kamal zero-downtime deploys on ports 80 and 443. Use when the user wants to route a domain (host/hosts), enable automatic HTTPS via Let's Encrypt (ssl), point the proxy at their app's port (app_port), tune the deploy healthcheck (/up), or adjust response_timeout and buffering — and when they say things like "configure the kamal proxy," "set up SSL for my domain," "add my custom domain," "the proxy isn't routing," "reboot the proxy," "upgrade kamal-proxy," or run kamal proxy boot/reboot/start/stop/details/logs. Covers the proxy config block and the kamal proxy command. For full deploys, see deploy. For enabling the proxy per role, see servers. For starting and stopping the app container, see app. For migrating from Kamal 1.x to kamal-proxy, see upgrade.
 metadata:
   version: 1.0.0
 ---
@@ -233,7 +233,7 @@ servers:
 
 ## Related Skills
 
-- **deploying**: Run `kamal deploy` to apply proxy configuration and roll out new versions through the proxy.
-- **servers-and-roles**: Define `servers` roles and control which roles run the proxy.
-- **app-operations**: Start, stop, and inspect the app container that the proxy routes to.
-- **upgrading**: Migrate from Kamal 1.x to 2.0 and kamal-proxy.
+- **deploy**: Run `kamal deploy` to apply proxy configuration and roll out new versions through the proxy.
+- **servers**: Define `servers` roles and control which roles run the proxy.
+- **app**: Start, stop, and inspect the app container that the proxy routes to.
+- **upgrade**: Migrate from Kamal 1.x to 2.0 and kamal-proxy.

@@ -80,11 +80,11 @@
     {
       "id": 7,
       "prompt": "How do I tail the logs from my running app with Kamal?",
-      "expected_output": "Should recognize this is viewing runtime logs, not configuring the logging driver. Should note that kamal app logs shows log lines from the app on the servers, and that this runtime command belongs to the app-operations skill. May add that the logging: config key only configures the Docker driver/options, not log viewing. Should cross-reference app-operations.",
+      "expected_output": "Should recognize this is viewing runtime logs, not configuring the logging driver. Should note that kamal app logs shows log lines from the app on the servers, and that this runtime command belongs to the app skill. May add that the logging: config key only configures the Docker driver/options, not log viewing. Should cross-reference app.",
       "assertions": [
         "Recognizes this as viewing logs rather than configuring the driver",
         "Mentions kamal app logs for showing app log lines",
-        "Cross-references the app-operations skill",
+        "Cross-references the app skill",
         "Clarifies the logging: key configures the driver/options, not log viewing"
       ],
       "files": []

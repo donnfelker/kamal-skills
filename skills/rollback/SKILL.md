@@ -1,6 +1,6 @@
 ---
 name: rollback
-description: Roll back a Kamal deployment to a previous image when a release goes bad, and identify or check which versions are deployed. Use when the user says "roll back," "rollback," "revert to the previous version," "go back to the last working deploy," "the deploy is broken, undo it," "which version is running," or "what versions can I roll back to." Covers `kamal rollback [VERSION]`, finding rollback targets with `kamal app containers -q`, and checking versions with `kamal app version` and `kamal version`. For building and shipping new releases, see deploying. For inspecting, stopping, starting, and managing running app containers, see app-operations.
+description: Roll back a Kamal deployment to a previous image when a release goes bad, and identify or check which versions are deployed. Use when the user says "roll back," "rollback," "revert to the previous version," "go back to the last working deploy," "the deploy is broken, undo it," "which version is running," or "what versions can I roll back to." Covers `kamal rollback [VERSION]`, finding rollback targets with `kamal app containers -q`, and checking versions with `kamal app version` and `kamal version`. For building and shipping new releases, see deploy. For inspecting, stopping, starting, and managing running app containers, see app.
 metadata:
   version: 1.0.0
 ---
@@ -27,7 +27,7 @@ A rollback targets a **version** — the Git version hash that tags the app imag
 
 Because the image is already present on the servers, the rollback is immediate and offline-friendly — no registry pull.
 
-> **Important:** By default, old containers are pruned after 3 days when you run `kamal deploy`. You can only roll back to a version whose container/image is still on the servers. If the target was pruned, you must redeploy that version instead (see the deploying skill).
+> **Important:** By default, old containers are pruned after 3 days when you run `kamal deploy`. You can only roll back to a version whose container/image is still on the servers. If the target was pruned, you must redeploy that version instead (see the deploy skill).
 
 ## Step-by-Step Walkthrough
 
@@ -90,11 +90,11 @@ Don't confuse `kamal app version` (your **app's** deployed version) with `kamal 
 
 ## Common Pitfalls
 
-- **Target already pruned.** Old containers are pruned after 3 days by default when you run `kamal deploy`. If the version you want is gone, roll back is not possible — redeploy that Git version instead (see deploying).
+- **Target already pruned.** Old containers are pruned after 3 days by default when you run `kamal deploy`. If the version you want is gone, roll back is not possible — redeploy that Git version instead (see deploy).
 - **Rolling back to a still-broken version.** Read the container `STATUS` in `kamal app containers -q`; an `Exited (1)` container failed before. Choose a version that was actually healthy.
 - **Confusing CLI version with app version.** Use `kamal app version` for the deployed app, `kamal version` for the Kamal tool.
 
 ## Related Skills
 
-- **deploying**: For building and shipping new releases with `kamal deploy`, and for redeploying a specific version when the rollback target has been pruned.
-- **app-operations**: For inspecting, stopping, starting, and managing running app containers with the `kamal app` subcommands.
+- **deploy**: For building and shipping new releases with `kamal deploy`, and for redeploying a specific version when the rollback target has been pruned.
+- **app**: For inspecting, stopping, starting, and managing running app containers with the `kamal app` subcommands.

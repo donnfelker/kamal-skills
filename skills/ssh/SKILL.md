@@ -1,6 +1,6 @@
 ---
 name: ssh
-description: Configure how Kamal connects to servers over SSH and tune SSHKit connection handling. Use when the user sets the SSH `user` or `port`, authenticate with specific `keys`/`key_data`, force `keys_only`, control agent forwarding (`forward_agent`), load an OpenSSH `config` file, connect through a jump/bastion host with `proxy` or `proxy_command`, debug connection problems with `log_level: debug`, or tune concurrency and pooling (`max_concurrent_starts`, `pool_idle_timeout`, `dns_retries`) when deploying to many hosts. Also use when they say "kamal can't connect to my server," "permission denied (publickey)," "deploy as a non-root user," "kamal through a bastion/jump host," "SSH timeouts deploying to lots of servers," or "change the SSH port for kamal." These map to the `ssh:` and `sshkit:` blocks in `config/deploy.yml`. For first-time project setup, see getting-started. For defining the hosts and roles you connect to, see servers-and-roles.
+description: 'Configure how Kamal connects to servers over SSH and tune SSHKit connection handling. Use when the user sets the SSH `user` or `port`, authenticate with specific `keys`/`key_data`, force `keys_only`, control agent forwarding (`forward_agent`), load an OpenSSH `config` file, connect through a jump/bastion host with `proxy` or `proxy_command`, debug connection problems with `log_level: debug`, or tune concurrency and pooling (`max_concurrent_starts`, `pool_idle_timeout`, `dns_retries`) when deploying to many hosts. Also use when they say "kamal can''t connect to my server," "permission denied (publickey)," "deploy as a non-root user," "kamal through a bastion/jump host," "SSH timeouts deploying to lots of servers," or "change the SSH port for kamal." These map to the `ssh:` and `sshkit:` blocks in `config/deploy.yml`. For first-time project setup, see setup. For defining the hosts and roles you connect to, see servers.'
 metadata:
   version: 1.0.0
 ---
@@ -193,5 +193,5 @@ sshkit:
 
 ## Related Skills
 
-- **getting-started**: First-time Kamal setup — installing the gem, `kamal init`, and `config/deploy.yml` basics before you tune SSH.
-- **servers-and-roles**: Defining the hosts and roles (`servers:`) that these SSH settings connect to.
+- **setup**: First-time Kamal setup — installing the gem, `kamal init`, and `config/deploy.yml` basics before you tune SSH.
+- **servers**: Defining the hosts and roles (`servers:`) that these SSH settings connect to.

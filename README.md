@@ -61,25 +61,25 @@ Because they follow the cross-agent [Agent Skills spec](https://agentskills.io),
 |-------|-------------|
 | [accessories](skills/accessories/) | Run and manage accessory services — databases, Redis, search, and other long-lived dependencies your app needs —... |
 | [aliases](skills/aliases/) | Define custom command aliases under the top-level `aliases` key in `config/deploy.yml` so a long, repeated `kamal`... |
-| [app-operations](skills/app-operations/) | Operate and inspect already-running Kamal apps without redeploying. Manage app containers with `kamal app` (boot,... |
-| [booting](skills/booting/) | Control how Kamal boots new containers across many servers during a deploy — rolling the release out in batches instead... |
-| [building-images](skills/building-images/) | Configure Kamal builders and build then push your app image. Use this skill when the user wants to set up the `builder`... |
-| [configuration](skills/configuration/) | Understand and write your Kamal configuration in config/deploy.yml. Use when the user says "set up config/deploy.yml,"... |
+| [app](skills/app/) | Operate and inspect already-running Kamal apps without redeploying. Manage app containers with `kamal app` (boot,... |
+| [build](skills/build/) | Configure Kamal builders and build then push your app image. Use this skill when the user wants to set up the `builder`... |
+| [config](skills/config/) | Understand and write your Kamal configuration in config/deploy.yml. Use when the user says "set up config/deploy.yml,"... |
 | [cron](skills/cron/) | Run recurring, scheduled, or cron jobs on a Kamal deployment. Use when the user says "run a cron job," "schedule a... |
-| [deploying](skills/deploying/) | Run Kamal deploys end to end — a full `kamal deploy` (build, push, pull, boot, health-check on GET /up, zero-downtime... |
-| [environment-variables](skills/environment-variables/) | Configure environment variables in your Kamal deploy.yml — the `env` block with `clear` values, `secret` references... |
-| [getting-started](skills/getting-started/) | Install Kamal and ship your first deploy on a new project. Use when the user is starting with Kamal for the first time... |
+| [deploy](skills/deploy/) | Run Kamal deploys end to end — a full `kamal deploy` (build, push, pull, boot, health-check on GET /up, zero-downtime... |
+| [env](skills/env/) | Configure environment variables in your Kamal deploy.yml — the `env` block with `clear` values, `secret` references... |
 | [hooks](skills/hooks/) | Write and wire up Kamal deploy hooks — scripts in `.kamal/hooks` (docker-setup, pre-connect, pre-build, pre-deploy,... |
 | [logging](skills/logging/) | Configure how logs flow in a Kamal deployment — the Docker logging driver and options for your app containers (the... |
 | [proxy](skills/proxy/) | Configure and operate kamal-proxy, the reverse proxy that gives Kamal zero-downtime deploys on ports 80 and 443. Use... |
-| [pruning](skills/pruning/) | Prune old Kamal containers and images and control how many Kamal keeps around. Kamal retains the last 5 deployed... |
+| [prune](skills/prune/) | Prune old Kamal containers and images and control how many Kamal keeps around. Kamal retains the last 5 deployed... |
 | [registry](skills/registry/) | Configure the Docker registry Kamal pushes your app image to and pulls it from — Docker Hub (the default), AWS ECR, GCP... |
 | [remove](skills/remove/) | Tear down a Kamal deployment with `kamal remove` — it removes the kamal-proxy, app, and accessory containers from your... |
 | [rollback](skills/rollback/) | Roll back a Kamal deployment to a previous image when a release goes bad, and identify or check which versions are... |
+| [rollout](skills/rollout/) | Control how Kamal boots new containers across many servers during a deploy — rolling the release out in batches instead... |
 | [secrets](skills/secrets/) | Manage secrets for a Kamal deployment — the `.kamal/secrets` file, dotenv variable and command substitution, and the... |
-| [servers-and-roles](skills/servers-and-roles/) | Define and structure the servers Kamal deploys to — a simple list of hosts, multiple custom roles (such as web and... |
+| [servers](skills/servers/) | Define and structure the servers Kamal deploys to — a simple list of hosts, multiple custom roles (such as web and... |
+| [setup](skills/setup/) | Install Kamal and ship your first deploy on a new project. Use when the user is starting with Kamal for the first time... |
 | [ssh](skills/ssh/) | Configure how Kamal connects to servers over SSH and tune SSHKit connection handling. Use when the user sets the SSH... |
-| [upgrading](skills/upgrading/) | Walk through upgrading an existing Kamal 1.x project to Kamal 2.0 with `kamal upgrade` — the move from Traefik to... |
+| [upgrade](skills/upgrade/) | Walk through upgrading an existing Kamal 1.x project to Kamal 2.0 with `kamal upgrade` — the move from Traefik to... |
 <!-- SKILLS:END -->
 
 ## Installation
@@ -105,7 +105,7 @@ Use [npx skills](https://github.com/vercel-labs/skills) to install skills direct
 npx skills add donnfelker/kamal-skills
 
 # Install specific skills
-npx skills add donnfelker/kamal-skills --skill deploying secrets
+npx skills add donnfelker/kamal-skills --skill deploy secrets
 
 # List available skills
 npx skills add donnfelker/kamal-skills --list
@@ -128,10 +128,10 @@ Once installed, just ask your agent to help with Kamal tasks:
 
 ```
 "Help me deploy my Rails app with Kamal"
-→ Uses deploying skill
+→ Uses deploy skill
 
 "Set up Kamal for the first time on this project"
-→ Uses getting-started skill
+→ Uses setup skill
 
 "Add a Postgres accessory to my Kamal config"
 → Uses accessories skill
@@ -146,13 +146,13 @@ Once installed, just ask your agent to help with Kamal tasks:
 → Uses proxy skill
 
 "Upgrade my project from Kamal 1.x to 2.0"
-→ Uses upgrading skill
+→ Uses upgrade skill
 ```
 
 You can also invoke skills directly:
 
 ```
-/deploying
+/deploy
 /secrets
 /proxy
 ```
@@ -160,18 +160,18 @@ You can also invoke skills directly:
 ## Skill Categories
 
 ### Getting Started
-- `getting-started` - Install Kamal and ship your first deploy
-- `configuration` - Write and structure config/deploy.yml
+- `setup` - Install Kamal and ship your first deploy
+- `config` - Write and structure config/deploy.yml
 
 ### Deploying & Building
-- `deploying` - Run full and fast deploys, target hosts/roles, manage the deploy lock
-- `building-images` - Configure builders and build/push your app image
+- `deploy` - Run full and fast deploys, target hosts/roles, manage the deploy lock
+- `build` - Configure builders and build/push your app image
 - `rollback` - Revert to a previous image when a release goes bad
-- `booting` - Control the boot strategy and roll out in batches
+- `rollout` - Control the boot strategy and roll out in batches
 
 ### Configuration
-- `servers-and-roles` - Define servers, roles, and the primary role
-- `environment-variables` - Set env vars — clear vs secret, tags, per-role env
+- `servers` - Define servers, roles, and the primary role
+- `env` - Set env vars — clear vs secret, tags, per-role env
 - `registry` - Configure the Docker registry and log in/out
 - `proxy` - Configure and operate kamal-proxy for zero-downtime deploys and SSL
 - `accessories` - Run databases, Redis, search, and other dependencies
@@ -184,13 +184,13 @@ You can also invoke skills directly:
 - `secrets` - Manage secrets and password-manager vault integrations
 
 ### Operations
-- `app-operations` - Inspect and control already-running app containers
+- `app` - Inspect and control already-running app containers
 - `hooks` - Run scripts at fixed points in a deploy
-- `pruning` - Prune old containers/images and tune retention
+- `prune` - Prune old containers/images and tune retention
 - `remove` - Tear down a deployment and log out of the registry
 
 ### Upgrading
-- `upgrading` - Upgrade a Kamal 1.x project to 2.0
+- `upgrade` - Upgrade a Kamal 1.x project to 2.0
 
 ## Contributing
 

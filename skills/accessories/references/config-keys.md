@@ -112,7 +112,7 @@ Passed to the Docker run command in the form `--<name> <value>`:
 
 ## env
 
-Environment variables. See the official [Environment variables](https://kamal-deploy.org/docs/configuration/environment-variables/) docs (and the `environment-variables` and `secrets` skills) for `clear` vs. `secret`, aliasing, and tags.
+Environment variables. See the official [Environment variables](https://kamal-deploy.org/docs/configuration/environment-variables/) docs (and the `env` and `secrets` skills) for `clear` vs. `secret`, aliasing, and tags.
 
 ```yaml
     env:
