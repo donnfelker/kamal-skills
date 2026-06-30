@@ -12,6 +12,42 @@ Built by [Donn Felker](https://donnfelker.com).
 
 Run into a problem or have a question? [Open an issue](https://github.com/donnfelker/kamal-skills/issues) — we're happy to help.
 
+## Recommended: Guard against destructive commands
+
+These skills let an AI agent run **real Kamal commands against your servers**, including destructive ones — `kamal remove` (tears down the proxy, app, and accessories), `kamal app remove`, and `kamal prune`. Before you let an agent loose on a live deployment, install **[Destructive Command Guard (`dcg`)](https://github.com/Dicklesworthstone/destructive_command_guard)** and enable the `platform.kamal` pack so it can't accidentally destroy your deployment.
+
+> [!WARNING]
+> `dcg` is a hook that blocks destructive commands before they execute. The `platform.kamal` pack adds Kamal-specific guards on top — a few minutes of setup that can save a production environment.
+
+**1. Install dcg:**
+
+```bash
+curl -fsSL "https://raw.githubusercontent.com/Dicklesworthstone/destructive_command_guard/main/install.sh?$(date +%s)" | bash -s -- --easy-mode
+```
+
+**2. Enable the Kamal pack** — add it to `~/.config/dcg/config.toml`:
+
+```toml
+[packs]
+enabled = [
+    "platform.kamal",
+]
+```
+
+…or set it for the current session via environment variable:
+
+```bash
+export DCG_PACKS="platform.kamal"
+```
+
+**3. Confirm it's active** (and see the exact pack name plus what each pack guards):
+
+```bash
+dcg packs --verbose
+```
+
+Preview whether any command would be blocked with `dcg test "<command>"` or `dcg explain "<command>"`.
+
 ## What are Skills?
 
 Skills are markdown files that give AI agents specialized knowledge and workflows for specific tasks. When you add these to your project, your agent can recognize when you're working on a Kamal deployment task and apply the right commands, configuration, and best practices — straight from the official docs.
