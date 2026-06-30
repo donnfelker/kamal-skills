@@ -1,0 +1,103 @@
+{
+  "skill_name": "proxy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to serve my app at app.example.com with automatic HTTPS using Kamal. My Rails app listens on port 3000 inside the container. How do I configure the proxy?",
+      "expected_output": "Should suggest reading the existing config/deploy.yml proxy block first. Should set host: app.example.com, app_port: 3000, and ssl: true under the proxy block. Should explain that automatic SSL uses Let's Encrypt and requires deploying to one server with host set, the host pointing to that server, and port 443 open for the challenge. Should note that with ssl: true kamal-proxy stops forwarding X-Forwarded-For/X-Forwarded-Proto headers unless forward_headers: true is set. Should mention that proxy options apply at deploy time, so changes take effect on kamal deploy.",
+      "assertions": [
+        "Suggests reading config/deploy.yml before configuring",
+        "Sets host to app.example.com under proxy",
+        "Sets app_port: 3000",
+        "Sets ssl: true for automatic HTTPS via Let's Encrypt",
+        "States Let's Encrypt requires one server, host set, and port 443 open",
+        "Notes headers are not forwarded with ssl: true unless forward_headers: true",
+        "Says proxy config is applied on kamal deploy",
+        "Does not invent config keys, flags, or defaults"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "My healthcheck endpoint is /health, not /up, and requests are timing out during deploys. How do I change the proxy healthcheck and the response timeout?",
+      "expected_output": "Should explain the proxy hits /up once every second until the deploy timeout with a 5-second per-request timeout by default. Should configure proxy.healthcheck with path: /health and may set interval and timeout. Should explain response_timeout is separate and controls how long the proxy waits for requests to complete, defaulting to 30 seconds, and show setting it (e.g. response_timeout: 10). Should not conflate the healthcheck timeout with response_timeout.",
+      "assertions": [
+        "Sets proxy.healthcheck.path to /health",
+        "States default healthcheck path is /up, interval ~1s, per-request timeout 5s",
+        "Explains response_timeout defaults to 30 seconds",
+        "Shows response_timeout under the proxy block",
+        "Distinguishes healthcheck timeout from response_timeout",
+        "Does not invent additional healthcheck keys"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "we need to upgrade kamal-proxy on our 5 web servers without taking everything down at once. whats the command?",
+      "expected_output": "Should recommend kamal proxy reboot to upgrade kamal-proxy and note it causes a small outage per server and prompts for confirmation. Should recommend kamal proxy reboot --rolling to avoid restarting on all servers simultaneously. May mention the pre-proxy-reboot and post-proxy-reboot hooks for removing and adding servers to upstream load balancers. Should not invent flags beyond --rolling.",
+      "assertions": [
+        "Recommends kamal proxy reboot for upgrading kamal-proxy",
+        "Notes reboot causes a small outage and prompts for confirmation",
+        "Recommends kamal proxy reboot --rolling for non-simultaneous restarts",
+        "May mention pre-proxy-reboot / post-proxy-reboot hooks",
+        "Does not invent CLI flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I can't use Let's Encrypt because we deploy from two hosts. We already have a certificate from our CA. How do I give the Kamal proxy our own SSL cert?",
+      "expected_output": "Should explain that custom certificates are loaded from secrets by setting ssl to a hash mapping certificate_pem and private_key_pem to secret names. Should show the proxy.ssl block with certificate_pem: CERTIFICATE_PEM and private_key_pem: PRIVATE_KEY_PEM. Should point to .kamal/secrets for the secret values. Should warn that deployments fail if the certificate or key is missing or invalid, and that certs/keys must not be hard-coded in source control.",
+      "assertions": [
+        "Uses ssl as a hash with certificate_pem and private_key_pem",
+        "Maps those keys to secret names",
+        "References .kamal/secrets for the actual values",
+        "Warns deployments fail if cert or key is missing or invalid",
+        "Warns against hard-coding certs/keys in source control",
+        "Does not claim Let's Encrypt works across multiple hosts"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "The proxy doesn't seem to be routing to my new app on this server. How do I look at the proxy and its logs, and is it even enabled for this role?",
+      "expected_output": "Should suggest kamal proxy details to show details about the proxy container and kamal proxy logs to show proxy log lines. Should explain the proxy is enabled by default on the primary role and disabled by default on other roles, enabled per role with proxy: true (or a proxy config) and disabled on the primary with proxy: false. Should suggest checking that a host is set, since with no host the proxy forwards all requests except those matching other apps that do have a host. Should not invent subcommands.",
+      "assertions": [
+        "Recommends kamal proxy details",
+        "Recommends kamal proxy logs",
+        "Explains proxy is enabled by default on the primary role only",
+        "Explains enabling per role with proxy: true and disabling with proxy: false",
+        "Mentions host-based routing behavior when no host is set",
+        "Does not invent kamal proxy subcommands"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "We run multiple apps on one server and I want to change the proxy's published HTTP port and max log size. I saw kamal proxy boot_config — should I use that?",
+      "expected_output": "Should note that kamal proxy boot_config is deprecated and recommend the proxy run configuration (proxy/run block) instead. Should show setting http_port and log_max_size under proxy.run (log_max_size default \"10m\", http_port default 80, https_port default 443, publish default true). Should explain the run options are used when booting the proxy container and loaded at boot via kamal proxy boot or kamal proxy reboot. Should note that with multiple apps on one server there is a single shared proxy, so boot configuration must be managed centrally.",
+      "assertions": [
+        "States kamal proxy boot_config is deprecated",
+        "Recommends the proxy run configuration (proxy/run) instead",
+        "Sets http_port and log_max_size under proxy.run",
+        "Cites correct defaults (log_max_size 10m, http_port 80, https_port 443, publish true)",
+        "Explains run config is applied when booting via kamal proxy boot or reboot",
+        "Notes a single shared proxy when multiple apps run on one server"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Users uploading large files get errors through the Kamal proxy. Can I bump the buffering limits?",
+      "expected_output": "Should explain buffering is enabled by default with a max request body size of 1GB and no limit for response size, and the buffering memory limit defaults to 1MB with anything larger written to disk. Should show configuring proxy.buffering with max_request_body (and optionally max_response_body, memory, requests, responses). Should note these are proxy options applied at deploy time. Should not invent buffering keys beyond requests, responses, max_request_body, max_response_body, and memory.",
+      "assertions": [
+        "States buffering is enabled by default with 1GB max request body and no response limit",
+        "States memory limit defaults to 1MB, larger written to disk",
+        "Configures proxy.buffering.max_request_body",
+        "Only uses documented buffering keys (requests, responses, max_request_body, max_response_body, memory)",
+        "Notes the change is applied on deploy"
+      ],
+      "files": []
+    }
+  ]
+}

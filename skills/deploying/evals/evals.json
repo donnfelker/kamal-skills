@@ -1,0 +1,92 @@
+{
+  "skill_name": "deploying",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm ready to ship the latest version of my app to production with Kamal. Walk me through it.",
+      "expected_output": "Should suggest reading config/deploy.yml (and .kamal/secrets) for hosts/roles. Should note Kamal deploys the currently checked-out Git version and only builds committed files, so changes must be committed first. Should give `kamal deploy` as the command and explain the sequence: registry login, build/push/pull, ensure kamal-proxy is running on ports 80 and 443, start a new container for the current Git hash, cut traffic over once GET /up returns 200 OK on port 80, stop the old container, then prune. Should mention kamal-proxy provides zero-downtime cutover.",
+      "assertions": [
+        "Recommends reviewing config/deploy.yml before deploying",
+        "Notes Kamal deploys the currently checked-out / committed Git version",
+        "Gives `kamal deploy` as the command",
+        "Describes the deploy sequence including build, push, and pull",
+        "Mentions the GET /up 200 OK health check before traffic cutover",
+        "Mentions kamal-proxy and zero-downtime cutover",
+        "Mentions pruning of unused images and stopped containers"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "can i deploy just to my web servers and not the workers? i only changed the web role",
+      "expected_output": "Should explain that a deploy targets all hosts and roles by default and can be narrowed with `--roles` (`-r`). Should give `kamal deploy --roles=web`. May mention `--hosts` (`-h`) with comma separation and `*` wildcards, and `--primary`/`-p` for the primary host only. Assertions must stay grounded: roles and hosts are comma-separated and support wildcards with `*`.",
+      "assertions": [
+        "Explains deploys target all roles/hosts by default",
+        "Provides `kamal deploy --roles=web` (or `-r`)",
+        "Mentions hosts/roles are comma-separated and support `*` wildcards",
+        "Does not invent flags beyond --roles/--hosts/--primary"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "What's the difference between kamal deploy and kamal redeploy? When should I use redeploy?",
+      "expected_output": "Should explain `kamal redeploy` deploys the app but skips bootstrapping servers, starting kamal-proxy, pruning, and registry login, which makes it faster. Should state you must run `kamal deploy` at least once first. Should recommend redeploy for repeat deploys to already-provisioned servers that are already running kamal-proxy. Should not claim redeploy skips the build (it does not).",
+      "assertions": [
+        "States redeploy skips bootstrapping, starting kamal-proxy, pruning, and registry login",
+        "States `kamal deploy` must be run at least once first",
+        "Frames redeploy as faster for already-set-up servers",
+        "Does not incorrectly claim redeploy skips the image build"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "A deploy crashed halfway and now every deploy says the lock is held. How do I clear it?",
+      "expected_output": "Should explain the deploy lock is an atomically created directory in the .kamal directory on the primary server, taken by commands that are unsafe to run concurrently. Should recommend `kamal lock status` to inspect it (showing who holds it, the version, and the message) and `kamal lock release` to clear a leftover lock from a failed command. May mention `kamal lock acquire -m` for intentionally locking during maintenance. Should not invent a force/clear flag.",
+      "assertions": [
+        "Explains the lock lives in .kamal on the primary server",
+        "Recommends `kamal lock status` to inspect the lock",
+        "Recommends `kamal lock release` to clear a leftover lock",
+        "Does not invent unsupported lock subcommands or flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "We've got a maintenance window tonight. I want to block all deploys during it, then re-enable them after. And a teammate's deploy keeps failing because someone is mid-deploy.",
+      "expected_output": "For the maintenance window: should recommend `kamal lock acquire -m \"...\"` to take the lock with a message, then `kamal lock release` afterward. Should explain that a manually acquired lock is NOT waited on by `--lock-wait` and that such commands fail immediately with 'Deploy lock held manually, not waiting'. For the failing teammate: should explain that commands taking the lock automatically fail immediately when it's held, and `--lock-wait` makes them poll and retry until released, tunable with `--lock-wait-timeout` (default 900) and `--lock-wait-interval` (default 15).",
+      "assertions": [
+        "Uses `kamal lock acquire -m` to block deploys and `kamal lock release` to re-enable",
+        "Explains a manual lock is not waited on by --lock-wait (fails with 'Deploy lock held manually')",
+        "Explains `--lock-wait` makes auto-lock commands poll and retry instead of failing",
+        "Cites --lock-wait-timeout default 900 and --lock-wait-interval default 15"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "CI already built and pushed my image to the registry. Can I deploy without rebuilding it? Also can I skip the hooks this time?",
+      "expected_output": "Should give `kamal deploy --skip-push` (`-P`) to skip the image build and push and roll out the already-pushed image, noting the default is false. Should give `kamal deploy --skip-hooks` (`-H`) to not run hooks, default false, and that they can be combined. Should not invent other skip flags.",
+      "assertions": [
+        "Provides `kamal deploy --skip-push` (or -P) to skip the build and push",
+        "Provides `kamal deploy --skip-hooks` (or -H) to not run hooks",
+        "Notes both default to false",
+        "Does not invent additional skip flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "This is a brand-new server I've never deployed to. Can I just run kamal redeploy?",
+      "expected_output": "Should explain that `kamal redeploy` requires `kamal deploy` to have run at least once, because it skips bootstrapping, starting kamal-proxy, pruning, and registry login. For a fresh host should point to `kamal setup`, which installs Docker, boots accessories, and then runs the deploy. Should not claim redeploy bootstraps a fresh server.",
+      "assertions": [
+        "States redeploy cannot be used on a server that has never been deployed to",
+        "Explains redeploy skips bootstrapping/kamal-proxy startup/registry login",
+        "Recommends `kamal setup` (or `kamal deploy`) for the first deploy to a fresh host",
+        "Does not claim redeploy provisions a fresh server"
+      ],
+      "files": []
+    }
+  ]
+}

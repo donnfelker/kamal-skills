@@ -1,0 +1,98 @@
+{
+  "skill_name": "remove",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm decommissioning our old production box. How do I completely tear down the Kamal deployment — proxy, app, accessories, and the registry login?",
+      "expected_output": "Should suggest reading config/deploy.yml (and .kamal/secrets) first to confirm what's being removed. Should identify `kamal remove` as the command and explain it removes the app, kamal-proxy, and accessory containers and logs out of the Docker registry. Should note that it prompts for confirmation unless you add `-y`. Should flag that the operation is destructive. Should not invent flags or behaviors beyond the docs.",
+      "assertions": [
+        "Suggests reading config/deploy.yml before running",
+        "Identifies `kamal remove` as the command",
+        "States it removes the app, kamal-proxy, and accessory containers",
+        "States it logs out of the Docker registry",
+        "Mentions it prompts for confirmation and that `-y` skips the prompt",
+        "Warns the operation is destructive",
+        "Does not fabricate undocumented flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "how do i nuke my whole kamal setup without it asking me to confirm?",
+      "expected_output": "Should trigger on casual phrasing. Should use `kamal remove -y`, explaining that `-y` skips the confirmation prompt. Should still note that this is destructive and removes the proxy, app, and accessory containers and logs out of the registry. Should not invent additional flags.",
+      "assertions": [
+        "Triggers on casual phrasing",
+        "Uses `kamal remove` with the `-y` option",
+        "Explains `-y` skips the confirmation prompt",
+        "Notes it removes the kamal-proxy, app, and accessory containers and logs out of the registry",
+        "Warns it is destructive",
+        "Does not fabricate undocumented flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "We're shutting down just our staging environment, not production. How do I run kamal remove against only staging?",
+      "expected_output": "Should scope the teardown to staging with the destination flag: `kamal remove -d staging`. Should explain that a destination maps to a destination config file (staging -> config/deploy.staging.yml). Should make clear this targets only the staging deployment, not production. May mention `-c/--config-file` as an alternative to point at a specific config. Should not run a blanket removal against all environments.",
+      "assertions": [
+        "Uses `-d`/`--destination` to scope the teardown to staging",
+        "Maps staging to config/deploy.staging.yml",
+        "Runs `kamal remove` scoped to that destination rather than everything",
+        "Does not tear down production",
+        "Does not invent undocumented targeting flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I just want to get rid of the kamal-proxy container, not the whole app. What do I run?",
+      "expected_output": "Should use `kamal proxy remove` rather than a full `kamal remove`. Should state that `kamal proxy remove` removes the proxy container and image from servers. Should not run the full teardown for a single component. Should not invent behaviors.",
+      "assertions": [
+        "Uses `kamal proxy remove`",
+        "States it removes the proxy container and image from servers",
+        "Does not run a full `kamal remove` for a single component",
+        "Does not fabricate undocumented flags or behaviors"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "If I run kamal accessory remove on my mysql accessory, will I lose the database data?",
+      "expected_output": "Should answer yes: `kamal accessory remove [NAME]` removes the accessory container, image, AND the data directory from the host. Should warn this means data loss and recommend backing up first. Should note it is the most destructive of the remove subcommands and cross-reference the accessories skill for how data is persisted. Should not claim the data is preserved.",
+      "assertions": [
+        "States `kamal accessory remove` deletes the container, image, and data directory",
+        "Warns that the accessory's data will be lost",
+        "Recommends backing up first",
+        "Cross-references the accessories skill",
+        "Does not claim the data is preserved"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "After tearing everything down, how do I make sure the servers are logged out of our Docker registry?",
+      "expected_output": "Should note that `kamal remove` already logs out of the Docker registry as part of the teardown. Should add that you can log out on its own with `kamal registry logout`, which logs out of the remote registry locally and remotely. Should not invent additional registry behaviors.",
+      "assertions": [
+        "Notes `kamal remove` logs out of the registry as part of teardown",
+        "Uses `kamal registry logout` for a standalone logout",
+        "States it logs out of the remote registry locally and remotely",
+        "Does not fabricate undocumented registry behavior"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Does kamal remove also delete the app images, or just the containers? I want a totally clean server.",
+      "expected_output": "Should describe `kamal remove` per the docs: it removes the app, kamal-proxy, and accessory containers and logs out of the registry. To go further and remove images (and accessory data), should point to the per-component remove subcommands: `kamal app remove` removes app containers and images, `kamal proxy remove` removes the proxy container and image, and `kamal accessory remove` removes the accessory container, image, and data directory. Should not assert undocumented behavior about what `kamal remove` itself does with images.",
+      "assertions": [
+        "Describes `kamal remove` as removing containers and logging out of the registry, per the docs",
+        "Points to per-component remove subcommands to also remove images",
+        "States `kamal app remove` removes app containers and images",
+        "States `kamal proxy remove` removes the proxy container and image",
+        "States `kamal accessory remove` removes the container, image, and data directory",
+        "Does not assert undocumented behavior about kamal remove and images"
+      ],
+      "files": []
+    }
+  ]
+}

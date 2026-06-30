@@ -1,0 +1,96 @@
+{
+  "skill_name": "registry",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm deploying with Kamal and want to use a private Docker Hub repository. How do I configure the registry?",
+      "expected_output": "Should suggest checking the existing config/deploy.yml registry block and .kamal/secrets first. Should explain Docker Hub is the default so only username and password are needed (no server key). Should show a registry block with username and a password referencing the KAMAL_REGISTRY_PASSWORD secret. Should warn that Docker Hub creates public repositories by default and advise setting up a private repository before deploying or changing the default repository privacy to private. Should recommend validating with kamal registry login.",
+      "assertions": [
+        "Suggests reading config/deploy.yml and .kamal/secrets before asking questions",
+        "States Docker Hub is the default registry so server can be omitted",
+        "Shows username and password keys with password referencing KAMAL_REGISTRY_PASSWORD",
+        "Warns Docker Hub repositories default to public",
+        "Advises creating a private repository or changing default privacy to private",
+        "Recommends validating with kamal registry login"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Set up Kamal to push to AWS ECR.",
+      "expected_output": "Should state the AWS CLI must be installed locally. Should explain the ECR access token is only valid for 12 hours and use ERB in config/deploy.yml to shell out to the AWS CLI with aws ecr get-login-password as the password. Should set server to the ECR host (<aws-account-id>.dkr.ecr.<region>.amazonaws.com) and username to AWS. Should suggest validating with kamal registry login.",
+      "assertions": [
+        "Notes the AWS CLI must be installed locally",
+        "States the ECR token is only valid for 12 hours",
+        "Uses ERB with aws ecr get-login-password for the password",
+        "Sets server to the ECR host and username to AWS",
+        "Recommends validating with kamal registry login"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "how do i use google artifact registry with kamal?",
+      "expected_output": "Should trigger on casual phrasing. Should describe creating a GCP service account and granting roles/artifactregistry.writer. Should explain generating and downloading a JSON key, base64-encoding it (base64 -i key.json | tr -d newline), and storing it as the KAMAL_REGISTRY_PASSWORD secret. Should set username to _json_key_base64, server to <region>-docker.pkg.dev, and password to the KAMAL_REGISTRY_PASSWORD secret reference. May validate with kamal registry login.",
+      "assertions": [
+        "Triggers on casual phrasing",
+        "Describes creating a service account and granting roles/artifactregistry.writer",
+        "Explains base64-encoding the JSON key and storing it as KAMAL_REGISTRY_PASSWORD",
+        "Sets username to _json_key_base64",
+        "Sets server to a <region>-docker.pkg.dev host",
+        "References KAMAL_REGISTRY_PASSWORD as the password"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "kamal registry login is failing. how do I debug it?",
+      "expected_output": "Should explain that kamal registry login logs in to the registry locally and on all servers and is the way to validate the configuration in isolation. Should advise checking the registry block's server and username values and that KAMAL_REGISTRY_PASSWORD resolves correctly in .kamal/secrets. Should not invent flags or behaviors beyond what is documented. May note that kamal deploy logs in to the registry as its first step, so fixing login fixes deploy auth.",
+      "assertions": [
+        "Explains kamal registry login logs in locally and on all servers",
+        "Frames kamal registry login as a way to validate the configuration",
+        "Advises checking server, username, and that KAMAL_REGISTRY_PASSWORD resolves in .kamal/secrets",
+        "Does not invent undocumented flags or behaviors",
+        "May note kamal deploy logs in to the registry as its first step"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Can I run a local registry with Kamal for testing instead of pushing to Docker Hub?",
+      "expected_output": "Should explain that if the registry server starts with localhost, Kamal starts a local Docker registry on that port and pushes the app image to it. Should show registry with server: localhost:5555 (only server needed). May mention kamal registry setup sets up the local registry and kamal registry remove removes it.",
+      "assertions": [
+        "Explains that a localhost server makes Kamal start a local Docker registry on that port",
+        "States Kamal pushes the app image to the local registry",
+        "Shows a registry block with server: localhost:<port>",
+        "May mention kamal registry setup and kamal registry remove for the local registry"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "We host our images on GitHub Container Registry (ghcr.io). How do I point Kamal at it?",
+      "expected_output": "Should treat ghcr.io as a custom Docker-compatible registry that uses the same three registry keys. Should set server to ghcr.io, username to the account, and password to a secret reference such as KAMAL_REGISTRY_PASSWORD stored in .kamal/secrets. Should recommend validating with kamal registry login. Should not claim Kamal has GHCR-specific behavior beyond the standard server/username/password block.",
+      "assertions": [
+        "Treats ghcr.io as a custom registry using the standard server/username/password keys",
+        "Sets server to ghcr.io",
+        "Uses a KAMAL_REGISTRY_PASSWORD secret reference for the password",
+        "Recommends validating with kamal registry login",
+        "Does not assert undocumented GHCR-specific Kamal behavior"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "What does `kamal registry` do, and how do I log out of the registry on all my servers?",
+      "expected_output": "Should explain kamal registry logs in and out of the Docker registry on your servers, locally and remotely. Should identify kamal registry logout as logging out of the remote registry locally and remotely. May list the other subcommands (login, setup, remove, help) with their documented descriptions. Should not invent additional subcommands or flags.",
+      "assertions": [
+        "Explains kamal registry manages registry login/logout locally and on all servers",
+        "Identifies kamal registry logout as logging out locally and remotely",
+        "May list login, setup, remove, and help subcommands with accurate descriptions",
+        "Does not invent additional subcommands or flags"
+      ],
+      "files": []
+    }
+  ]
+}

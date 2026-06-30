@@ -1,0 +1,91 @@
+{
+  "skill_name": "environment-variables",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to add DATABASE_HOST and DATABASE_PORT to my Kamal deploy. They're not sensitive values.",
+      "expected_output": "Should recognize these are non-sensitive and use the simple env form with direct key/value pairs under the top-level env block (no clear/secret split needed). Should explain that these are passed to the docker run command when deploying. Should optionally suggest reading the existing config/deploy.yml first.",
+      "assertions": [
+        "Uses the env block with direct key/value pairs",
+        "Does not place non-sensitive values under the secret key",
+        "Notes that values are passed to the docker run command when deploying",
+        "Provides valid deploy.yml YAML"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "how do i keep my db password out of git in my kamal app?",
+      "expected_output": "Should trigger on casual phrasing. Should list the password's variable name under env.secret (names only) and move any plain variables under env.clear. Should explain the value is defined in .kamal/secrets, which Kamal loads via dotenv. Should warn not to check .kamal/secrets into version control if storing values directly. Should note that secrets are written to an env file on the host rather than passed directly to the container.",
+      "assertions": [
+        "Lists the secret name under env.secret",
+        "Defines the value in .kamal/secrets",
+        "Warns not to commit .kamal/secrets to version control",
+        "Explains secrets are stored in an env file on the host, not passed directly to the container",
+        "Triggers on casual phrasing"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "What's the difference between clear and secret env vars in Kamal?",
+      "expected_output": "Should explain that clear values are key/value pairs set in the config and passed directly to the container via docker run, and are safe to commit. Should explain that secret entries are a list of variable names whose values come from .kamal/secrets (loaded by dotenv) and are written to an env file on the host rather than passed directly. Should show the clear/secret YAML form.",
+      "assertions": [
+        "Explains clear values are passed directly to the container via docker run",
+        "Explains secret is a list of variable names with values from .kamal/secrets",
+        "States secrets are written to an env file on the host, not passed directly",
+        "Shows the env block with clear and secret keys"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I want a different MYSQL_USER value on just my monitoring servers in Kamal.",
+      "expected_output": "Should use env.tags to add the override for the monitoring tag. Should explain that the hosts must be tagged in the servers configuration first (cross-reference servers-and-roles). Should note that tag env can include clear and secret values. Should note that tags are only allowed in the top-level env configuration, not under a role-specific env.",
+      "assertions": [
+        "Uses env.tags with the monitoring tag",
+        "Explains hosts must be tagged in the servers configuration",
+        "Notes tags are only allowed in the top-level env, not role-specific env",
+        "Provides valid deploy.yml YAML"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Can I set environment variables only for my workers role and not the web role?",
+      "expected_output": "Should set an env block under the workers role within servers (using the hosts key for the role's host list when other options are present). Should explain the env applies only to that role's containers. Should note that tags cannot be used inside a role-specific env, and that per-host overrides must use top-level env.tags instead.",
+      "assertions": [
+        "Sets an env block under the role in servers",
+        "Explains the env applies only to that role",
+        "Notes tags are not allowed inside a role-specific env",
+        "Provides valid deploy.yml YAML"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "I have two databases and both containers expect a DB_PASSWORD env var, but the values need to be different. How do I configure that in Kamal?",
+      "expected_output": "Should use aliased secrets with the ENV_NAME:SECRET_NAME colon separator (e.g. DB_PASSWORD:MAIN_DB_PASSWORD and DB_PASSWORD:SECONDARY_DB_PASSWORD), so the same env name maps to different underlying secrets per context (tags and/or accessories). Should explain the colon separator aliases the env variable to a differently named secret. Should reference where the secret values are defined in .kamal/secrets.",
+      "assertions": [
+        "Uses the colon separator to alias env name to secret name",
+        "Maps the same DB_PASSWORD env name to two different secrets",
+        "Explains the secret values are defined/extracted in .kamal/secrets",
+        "Provides valid deploy.yml YAML"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "where do i actually put the secret values for my kamal app, and how does kamal find them?",
+      "expected_output": "Should explain secret values live in .kamal/secrets, loaded automatically via dotenv. Should describe the loading order: .kamal/secrets-common first, then .kamal/secrets, with later values overriding earlier ones; and that with a destination Kamal reads .kamal/secrets-common then .kamal/secrets.<destination> (and not the plain .kamal/secrets). Should mention variable/command substitution and that you can use kamal secrets fetch/extract helpers for password managers. Should warn not to commit the file if storing values directly.",
+      "assertions": [
+        "States secret values live in .kamal/secrets and are loaded via dotenv",
+        "Describes the secrets-common then secrets loading order with later values overriding",
+        "Mentions destination behavior reads .kamal/secrets.<destination>",
+        "Mentions variable/command substitution or kamal secrets fetch/extract helpers",
+        "Warns not to commit .kamal/secrets when storing values directly"
+      ],
+      "files": []
+    }
+  ]
+}

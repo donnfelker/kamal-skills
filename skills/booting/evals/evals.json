@@ -1,0 +1,94 @@
+{
+  "skill_name": "booting",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We deploy to 30 web servers with Kamal and restarting them all at once causes a thundering-herd reconnect against our database. How do I roll the deploy out gradually instead?",
+      "expected_output": "Should explain that Kamal's default is to boot new containers on all hosts in parallel, which is the cause. Should recommend adding a `boot` block to config/deploy.yml with `limit` set to an integer or percentage so hosts boot in groups. Should suggest reading the existing config/deploy.yml (or running kamal config) to count the hosts. May suggest adding `wait` to pause between groups. Should note the strategy takes effect on the next kamal deploy. Should not invent CLI flags for boot.",
+      "assertions": [
+        "States the default is booting all hosts in parallel",
+        "Recommends the boot.limit config key in config/deploy.yml",
+        "Notes limit can be an integer or a percentage string",
+        "Suggests inspecting config/deploy.yml or running kamal config to see the hosts",
+        "Mentions boot.wait as an option to pause between groups",
+        "Does not invent a command-line flag to control booting"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "kamal restarts everything at once and it spikes our CPU. can i make it do like 25% of the boxes at a time?",
+      "expected_output": "Should trigger on casual phrasing. Should confirm yes via boot.limit set to a percentage string ('25%'). Should show a boot block with limit: 25%. Should explain Kamal then boots the fleet in groups of that size, one group after another. May recommend adding wait between groups. Should mention this lives in config/deploy.yml and applies on the next deploy.",
+      "assertions": [
+        "Triggers on casual phrasing",
+        "Sets boot.limit to the percentage string 25%",
+        "Shows a boot block in YAML",
+        "Explains hosts boot in groups, one group after another",
+        "Locates the setting in config/deploy.yml"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "What's the difference between boot limit and boot wait in Kamal?",
+      "expected_output": "Should explain limit controls how many hosts boot at a time (an integer count or a percentage of the fleet), forming groups. Should explain wait is the number of seconds Kamal pauses between booting each group of hosts. Should clarify that wait only matters when limit is set, because with no limit all hosts boot in a single parallel group. Should not assert a specific numeric default for wait beyond noting it applies only with a limit.",
+      "assertions": [
+        "Describes limit as the number or percentage of hosts booted at a time",
+        "Describes wait as seconds paused between each group of hosts",
+        "Explains wait is only meaningful when limit is set",
+        "Does not invent a numeric default for wait"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "One of my hosts runs both the web role and a workers role. During a deploy they boot one after another on that host and it's slow. Can they boot at the same time?",
+      "expected_output": "Should identify this as the parallel_roles setting. Should explain that by default Kamal boots multiple roles on a single host sequentially, and that boot.parallel_roles: true boots them in parallel on that host. Should note parallel_roles defaults to false and only has an effect when a host carries more than one role. May cross-reference the servers-and-roles skill for how hosts map to roles.",
+      "assertions": [
+        "Identifies boot.parallel_roles as the relevant key",
+        "States roles on a host boot sequentially by default",
+        "Explains parallel_roles: true boots multiple roles on a host in parallel",
+        "Notes parallel_roles defaults to false",
+        "References the servers-and-roles skill or how hosts map to roles"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "I want Kamal to pause 10 seconds between each batch of servers when it deploys. How do I configure that?",
+      "expected_output": "Should set boot.wait: 10 in the boot block. Should explain that wait pauses between booting each group of hosts, so it must be paired with boot.limit to create groups in the first place. Should show a YAML example with both limit and wait. Should place the config in config/deploy.yml.",
+      "assertions": [
+        "Sets boot.wait to 10",
+        "Explains wait pauses between groups of hosts",
+        "Notes that wait requires limit to be set to form groups",
+        "Shows a YAML boot block with both limit and wait"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "For this one deploy I only want to ship to a single role's hosts. Can I do that with the boot config?",
+      "expected_output": "Should clarify scope: the boot config controls how the rollout is batched and paced across all hosts, not which hosts or roles a single command targets. Should explain that targeting specific hosts or roles for a one-off run is a function of the deploy command's targeting options, not the boot block. Should cross-reference the deploying skill (and/or servers-and-roles) rather than inventing boot keys for host/role selection.",
+      "assertions": [
+        "Clarifies boot config paces the rollout across hosts, not which hosts a command targets",
+        "Does not invent boot config keys for selecting hosts or roles",
+        "Defers one-off host/role targeting to the deploy command",
+        "Cross-references the deploying or servers-and-roles skill"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Give me a complete boot config for a 12-server fleet that deploys a quarter at a time with a short pause between batches.",
+      "expected_output": "Should produce a boot block with limit: 25% (a quarter) and a small wait value in seconds. Should explain that 25% of 12 hosts means groups of 3, booted one group at a time, with the wait pausing between groups. Should present it as part of config/deploy.yml. Should keep all keys grounded (limit, wait, optionally parallel_roles) and not introduce unsupported options.",
+      "assertions": [
+        "Sets boot.limit to 25%",
+        "Includes a boot.wait value in seconds",
+        "Explains 25% of 12 hosts results in groups of 3",
+        "Presents the config as part of config/deploy.yml",
+        "Only uses documented boot keys (limit, wait, parallel_roles)"
+      ],
+      "files": []
+    }
+  ]
+}

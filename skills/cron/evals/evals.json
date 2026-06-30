@@ -1,0 +1,93 @@
+{
+  "skill_name": "cron",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I run scheduled cron jobs with Kamal? I need a nightly cleanup task to run at 2am.",
+      "expected_output": "Should explain that Kamal runs cron in a dedicated container defined as a `cron` role under the `servers:` key. Should have the user create a `config/crontab` file with the nightly schedule (e.g. `0 2 * * *`). Should add the cron role with `hosts` and the boot command `bash -c \"(env && cat config/crontab) | crontab - && cron -f\"`. Should explain the schedule is stored in `config/crontab`. Should mention deploying to boot the cron container. Should not invent a `kamal cron` command.",
+      "assertions": [
+        "Defines a cron role under the servers: key",
+        "Uses the boot command bash -c \"(env && cat config/crontab) | crontab - && cron -f\"",
+        "States the schedule lives in config/crontab",
+        "Provides a valid crontab schedule line for the nightly task",
+        "Does not invent a dedicated kamal cron command",
+        "Mentions deploying to start the cron container"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "i need a job to run every 15 minutes on my server, how do i set that up with kamal?",
+      "expected_output": "Should trigger on casual phrasing. Should have the user add the schedule to `config/crontab` using standard cron syntax (e.g. `*/15 * * * *`). Should define a `cron` role under `servers:` with hosts and the `cmd: bash -c \"(env && cat config/crontab) | crontab - && cron -f\"`. Should note the crontab file is read inside the container and the commands run in the app image.",
+      "assertions": [
+        "Triggers on casual phrasing",
+        "Adds the every-15-minutes schedule to config/crontab using standard cron syntax",
+        "Defines a cron role under servers: with hosts and the cron boot command",
+        "Notes the commands run inside the app container/image"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "My Kamal cron jobs run but they can't see my environment variables — DATABASE_URL and RAILS_MASTER_KEY come up empty inside the cron jobs. What's wrong?",
+      "expected_output": "Should explain that cron does not automatically propagate environment variables. Should point out that the boot command's `(env && cat config/crontab)` portion is what copies the container's environment into the crontab as NAME=value lines, and that dropping it is a common cause. Should confirm the needed variables are actually present in the container via the `env:` config (clear/secret, with secrets from .kamal/secrets), since `env` can only copy variables that already exist in the container. Should cross-reference environment-variables.",
+      "assertions": [
+        "States that cron does not automatically propagate environment variables",
+        "Explains the (env && cat config/crontab) part copies env vars into the crontab",
+        "Checks that the variables are configured under env: so the container has them",
+        "Notes secrets come from .kamal/secrets",
+        "Cross-references the environment-variables skill"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I edited config/crontab and restarted but my cron schedule didn't change. Why?",
+      "expected_output": "Should explain that the boot command reads `config/crontab` with `cat` inside the container, so the file is baked into the app image at build time. Editing it locally has no effect until a new version of the app is deployed. Should recommend committing the change and redeploying (optionally targeting the role with `kamal deploy --roles cron`).",
+      "assertions": [
+        "Explains config/crontab is read from inside the container/app image",
+        "States that updating the schedule requires deploying a new version",
+        "Recommends committing the change and redeploying",
+        "May mention kamal deploy --roles cron to target the cron role"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "where do i put the cron schedule for kamal?",
+      "expected_output": "Should answer that the schedule goes in a `config/crontab` file in the repo, using standard cron syntax. Should explain that the cron role's boot command loads it with `cat config/crontab` and installs it with `crontab -`. Should note the file must be part of the built image. May suggest reading the existing config/deploy.yml and config/crontab first.",
+      "assertions": [
+        "States the schedule goes in config/crontab",
+        "Explains the boot command loads config/crontab and installs it via crontab -",
+        "Notes the file must be in the built app image",
+        "Does not invent a different schedule file location or Kamal cron key"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "My deploy.yml has servers as a plain list of IP addresses. How do I add a cron container alongside my web app?",
+      "expected_output": "Should explain that a plain list of servers is implicitly the `web` role, and that adding cron requires converting `servers:` to named roles so `web` and `cron` can coexist. Should show the `cron` role with `hosts` and the boot command. Should note the cron role is non-primary and does not sit behind the proxy by default. Should cross-reference servers-and-roles for converting host lists into named roles.",
+      "assertions": [
+        "Explains a plain server list is the implicit web role",
+        "Converts servers: to named roles to add cron alongside web",
+        "Shows the cron role with hosts and the cron boot command",
+        "Notes the cron role is non-primary / not behind the proxy by default",
+        "Cross-references the servers-and-roles skill"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "How can I check that my Kamal cron container is actually running and that my crontab got installed?",
+      "expected_output": "Should suggest `kamal details` to confirm the cron container is running. Should explain the container stays up because the boot command ends in `cron -f` (foreground). Should suggest inspecting the installed crontab in the running container with `kamal app exec --reuse --roles cron 'crontab -l'`. Should not invent flags or commands beyond what Kamal supports.",
+      "assertions": [
+        "Suggests kamal details to verify the cron container is running",
+        "Explains the container stays up because cron -f runs in the foreground",
+        "Suggests kamal app exec --reuse --roles cron 'crontab -l' to inspect the installed crontab",
+        "Does not invent unsupported commands or flags"
+      ],
+      "files": []
+    }
+  ]
+}

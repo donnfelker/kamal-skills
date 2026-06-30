@@ -1,0 +1,93 @@
+{
+  "skill_name": "logging",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Configure Docker log rotation in my Kamal setup so my app containers don't fill up the disk.",
+      "expected_output": "Should suggest reading config/deploy.yml first. Should use the logging: key with a driver and options. Should show options.max-size (e.g. max-size: 100m) as the way to cap container log size. Should explain that driver maps to Docker's --log-driver and each options entry maps to --log-opt key=value, and that Kamal passes these straight through to Docker. May note json-file is the driver used in the docs and point to Docker's logging driver docs for the full option list.",
+      "assertions": [
+        "Suggests reading existing config/deploy.yml before asking questions",
+        "Uses the logging: key with driver and options",
+        "Shows options.max-size to cap log size",
+        "Explains driver maps to --log-driver and options map to --log-opt",
+        "Notes Kamal passes the values through to Docker",
+        "Does not invent driver names or option keys as Kamal-specific facts"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "my server keeps running out of space because the docker logs are massive, can kamal help",
+      "expected_output": "Should trigger on casual phrasing. Should point to the logging: key with options to cap log size, e.g. driver: json-file and options.max-size. Should explain these are forwarded to Docker as --log-driver / --log-opt. Should keep claims grounded to driver and options only.",
+      "assertions": [
+        "Triggers on casual phrasing",
+        "Recommends the logging: key with options.max-size",
+        "Shows a driver such as json-file",
+        "Explains the values are passed through to Docker via --log-driver / --log-opt",
+        "Does not invent additional logging keys or defaults"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "We want to ship our Kamal deploy logs to our OpenTelemetry collector. How do we set that up?",
+      "expected_output": "Should identify this as the output: key (output loggers), not the logging: key. Should configure output.otel.endpoint with an OTLP HTTP endpoint (e.g. http://otel-gateway:4318). Should explain logs are sent as OTLP log records with resource attributes derived from Kamal's deploy tags (service, version, performer, destination, etc.). Should not confuse this with Docker container logging.",
+      "assertions": [
+        "Uses the output: key, not logging:",
+        "Configures output.otel.endpoint",
+        "Mentions OTLP HTTP / OTLP log records",
+        "Mentions resource attributes derived from deploy tags (service, version, performer, destination)",
+        "Distinguishes output logging from Docker container logging"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "can kamal just save the deploy output to a file somewhere on my machine?",
+      "expected_output": "Should use the output: key with the file logger. Should set output.file.path to a directory (e.g. /var/log/kamal/). Should explain one log file is created per deploy, named with the timestamp and command, written on the local machine that runs Kamal. Should not claim a default path or other file options not in the docs.",
+      "assertions": [
+        "Uses output.file.path",
+        "Explains path is a directory on the local machine",
+        "Notes one log file is created per deploy, named with timestamp and command",
+        "Does not invent a default path or undocumented file options"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "I want different Docker logging settings for my worker servers than my web servers. Is that possible with Kamal?",
+      "expected_output": "Should confirm logging: can be specified at the root level or for a specific role. Should show placing a logging: block under a role within servers: (e.g. under workers:) to override the logging for that role. Should keep the example to driver and options keys only.",
+      "assertions": [
+        "Confirms logging can be set at root level or per role",
+        "Shows a logging: block nested under a role within servers:",
+        "Uses only the driver and options keys",
+        "Does not invent role-specific logging keys"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "What's the difference between the logging and output keys in a Kamal config?",
+      "expected_output": "Should explain logging: controls the Docker logging driver and options for the app's containers (driver -> --log-driver, options -> --log-opt) and can be set at root or per role. Should explain output: controls where Kamal sends its own command output / deploy logs, via the otel and file loggers (output.otel.endpoint, output.file.path). Should make clear these are two independent concerns.",
+      "assertions": [
+        "Explains logging: is Docker container logging (driver/options, --log-driver/--log-opt)",
+        "Explains output: is where Kamal sends its own deploy/command logs",
+        "Names the otel and file output loggers (output.otel.endpoint, output.file.path)",
+        "States the two keys are independent concerns"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "How do I tail the logs from my running app with Kamal?",
+      "expected_output": "Should recognize this is viewing runtime logs, not configuring the logging driver. Should note that kamal app logs shows log lines from the app on the servers, and that this runtime command belongs to the app-operations skill. May add that the logging: config key only configures the Docker driver/options, not log viewing. Should cross-reference app-operations.",
+      "assertions": [
+        "Recognizes this as viewing logs rather than configuring the driver",
+        "Mentions kamal app logs for showing app log lines",
+        "Cross-references the app-operations skill",
+        "Clarifies the logging: key configures the driver/options, not log viewing"
+      ],
+      "files": []
+    }
+  ]
+}

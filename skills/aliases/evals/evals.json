@@ -1,0 +1,99 @@
+{
+  "skill_name": "aliases",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I keep typing `kamal app exec -i --reuse \"bin/rails console\"` ten times a day. Can I make a shortcut for it?",
+      "expected_output": "Should explain that aliases are shortcuts for Kamal commands defined under the top-level aliases key in config/deploy.yml. Should show adding `console: app exec -i --reuse \"bin/rails console\"` under aliases, dropping the leading kamal. Should explain it is then invoked as `kamal console`. Should suggest checking config/deploy.yml for an existing aliases block first. Must not invent alias syntax beyond the documented form.",
+      "assertions": [
+        "Identifies the top-level aliases key in config/deploy.yml",
+        "Shows the alias value as the command text after kamal (leading kamal dropped)",
+        "Uses the documented console example app exec -i --reuse \"bin/rails console\"",
+        "Explains it is run as kamal console",
+        "Suggests inspecting existing config/deploy.yml first",
+        "Does not invent alias syntax or undocumented behavior"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "How do I make a one-liner alias to deploy to staging?",
+      "expected_output": "Should explain that an alias can include a destination with the -d flag. Should show `staging_deploy: deploy -d staging` under the aliases key, invoked as `kamal staging_deploy`. Should note that -d staging makes deploy read the staging destination config. Should not fabricate flags beyond -d.",
+      "assertions": [
+        "Shows a deploy -d staging alias under the aliases key",
+        "States the alias is invoked as kamal staging_deploy",
+        "Explains -d specifies the staging destination",
+        "Underscore in the alias name is treated as valid",
+        "Does not invent additional deploy flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "What characters are allowed in a Kamal alias name? Can I call one `db_console` or `tail-logs`?",
+      "expected_output": "Should state that an alias name can only contain lowercase letters, numbers, dashes, and underscores. Should confirm both db_console and tail-logs are valid because underscores and dashes are permitted. Should note aliases are defined under the root aliases key. Should not add naming restrictions the docs do not state.",
+      "assertions": [
+        "States allowed characters: lowercase letters, numbers, dashes, and underscores",
+        "Confirms db_console is valid (underscores allowed)",
+        "Confirms tail-logs is valid (dashes allowed)",
+        "Notes aliases live under the root aliases key",
+        "Does not invent extra naming constraints"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Can you set up an alias that runs `uname -a` on just the web role's primary host without a bunch of log noise?",
+      "expected_output": "Should produce the documented uname alias `uname: app exec -p -q -r web \"uname -a\"`. Should explain -p targets the primary host, -q gives minimal logging, and -r web limits it to the web role. Should place it under the aliases key and note it runs as kamal uname. Must only use documented flags.",
+      "assertions": [
+        "Shows app exec -p -q -r web \"uname -a\" as the alias value",
+        "Explains -p as primary host",
+        "Explains -q as minimal/quiet logging",
+        "Explains -r web as limiting to the web role",
+        "Places the alias under the aliases key and notes kamal uname invocation",
+        "Does not invent flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "I've got a few commands I run constantly — opening a shell in the running container, tailing logs, and putting the app into maintenance mode. Give me aliases for all three.",
+      "expected_output": "Should add multiple entries under one aliases block, each being a documented command with the leading kamal removed: a shell alias such as `app exec -i --reuse bash`, a logs alias such as `app logs`, and a maintenance alias such as `app maintenance`. Should explain each is invoked as kamal <name>. Should not attach undocumented flags to app logs or app maintenance.",
+      "assertions": [
+        "Adds several aliases under a single aliases block",
+        "Shell alias uses app exec -i --reuse bash",
+        "Logs alias uses app logs",
+        "Maintenance alias uses app maintenance",
+        "Explains each runs as kamal <name>",
+        "Does not attach invented flags to the wrapped commands"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Where exactly do aliases go in my deploy config, and how does kamal know what to run when I type the alias?",
+      "expected_output": "Should explain aliases are defined at the root of config/deploy.yml under the aliases key. Should explain the alias value is everything you would type after kamal, and that kamal <name> expands to and runs that command. Should illustrate with a documented example like console expanding to app exec -i --reuse \"bin/rails console\". May point to the configuration skill for the surrounding config file. Must not claim undocumented expansion behavior.",
+      "assertions": [
+        "States aliases sit at the root of config/deploy.yml under the aliases key",
+        "Explains the value is the command text following kamal",
+        "Explains kamal <name> expands to and runs that command",
+        "Uses a documented example to illustrate the expansion",
+        "Does not claim undocumented behavior such as passing extra arguments"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "i already have an aliases section in deploy.yml with a console shortcut. how do i add another one for showing app containers?",
+      "expected_output": "Should recognize the existing aliases block and recommend adding a new entry to it rather than duplicating the key. Should show adding something like `containers: app containers`, invoked as kamal containers. Should note app containers shows app containers on servers. Should not introduce a second aliases key or invent flags.",
+      "assertions": [
+        "Recommends adding to the existing aliases block, not duplicating the aliases key",
+        "Adds a containers alias mapping to app containers",
+        "States it is invoked as kamal containers",
+        "Describes app containers as showing app containers on servers",
+        "Does not invent flags or a second aliases key"
+      ],
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "skill_name": "servers-and-roles",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're running background jobs on a separate server. How do I configure a workers role in Kamal alongside our web servers?",
+      "expected_output": "Should suggest reading the existing config/deploy.yml first. Should define named roles under the servers key, with a web role and a workers role. Should show the workers role running a custom command via cmd (e.g. bin/jobs). Should note that the most common split is web servers and job servers, and that by default only the primary (web) role uses the proxy, so the workers role has no proxy by default. Should use the list form for the web role and may use the hosts key form for workers if options are needed.",
+      "assertions": [
+        "Suggests reading the existing config/deploy.yml",
+        "Defines named roles (web and workers) under the servers key",
+        "Uses cmd to set the worker command",
+        "Notes that only the primary role uses the proxy by default",
+        "Does not invent config keys not in the Kamal docs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "i have 3 identical servers, simplest way to point kamal at them?",
+      "expected_output": "Should trigger on casual phrasing. Should provide a plain list of servers under the servers key, with no roles. Should explain that a bare list is implicitly assigned to the web role. Should not over-engineer with custom roles or the hosts key when they aren't needed.",
+      "assertions": [
+        "Triggers on casual phrasing",
+        "Provides a simple list of servers under the servers key",
+        "Explains the list is implicitly assigned to the web role",
+        "Does not add unnecessary roles or per-role options"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Our app has no web servers, only background workers. Kamal keeps expecting a web role. How do I fix that?",
+      "expected_output": "Should explain that Kamal expects a web role unless a different primary_role is set in the root configuration. Should recommend setting primary_role to the worker role (e.g. primary_role: workers) at the root level of config/deploy.yml, not inside a role. Should note that web is the default primary role.",
+      "assertions": [
+        "Explains that web is the default primary role",
+        "Recommends setting primary_role to the worker role",
+        "Places primary_role at the root level, not inside a role",
+        "Does not invent unsupported keys or behaviors"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "How do I make only my web servers run the proxy and keep it off the workers?",
+      "expected_output": "Should explain that by default only the primary role uses the proxy, so non-primary roles like workers already have the proxy disabled and need no extra config. Should mention that the proxy can be disabled on the primary role with proxy: false, and enabled on a non-primary role with proxy: true (which inherits the root proxy config) or a map of options to override it. Should not invent proxy options beyond proxy: true/false and overriding with a map.",
+      "assertions": [
+        "Explains the proxy is enabled only on the primary role by default",
+        "Notes non-primary roles have the proxy off by default",
+        "Mentions proxy: false to disable on primary and proxy: true to enable on a non-primary role",
+        "Does not invent proxy keys outside the Kamal docs"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Can I give my workers role more memory and a longer stop timeout than the web role?",
+      "expected_output": "Should show moving the workers host list under the hosts key so options can be added. Should use options with memory (and cpus is available) and set stop_timeout on the role. Should explain that per-role settings overwrite the matching settings from the root configuration. May note that the default stop_timeout is the drain_timeout for non-proxied roles and 10s for proxied roles.",
+      "assertions": [
+        "Moves the host list under the hosts key for the custom role",
+        "Uses options with memory for the role",
+        "Sets stop_timeout on the role",
+        "Explains per-role settings override the root configuration"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "I want to set different env vars on just one of my servers. How do I target it?",
+      "expected_output": "Should explain tagging the host in the servers list (e.g. - 172.0.0.2: experiments, with single or list of tags). Should explain that tags are used to attach custom env variables, and that those tags are mapped to env variables in the top-level env configuration. Should note that tags are only allowed in the top-level env, not under a role-specific env. Should reference the environment-variables skill for the env mapping details.",
+      "assertions": [
+        "Tags the specific host in the servers list",
+        "Explains tags map to custom env variables",
+        "Notes tags belong in the top-level env, not a role-specific env",
+        "References the environment-variables skill"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "We have web servers and a separate set of job servers. Walk me through structuring the servers block end to end.",
+      "expected_output": "Should walk through structuring the servers block: a web role and a job/workers role under servers. Should show the simple list form for roles without custom options and the hosts key form when a role needs options like cmd. Should mention that web is the primary role by default (carrying the proxy) and that the worker role runs a custom cmd with no proxy by default. May mention tagging hosts for per-host env variables. Should keep every key grounded in the Kamal docs (hosts, cmd, options, logging, proxy, labels, env, asset_path, stop_timeout).",
+      "assertions": [
+        "Defines a web role and a job/workers role under the servers key",
+        "Shows both the list form and the hosts key form appropriately",
+        "Notes web is the primary role by default and carries the proxy",
+        "Uses only documented per-role keys",
+        "Does not invent commands, keys, or defaults"
+      ],
+      "files": []
+    }
+  ]
+}

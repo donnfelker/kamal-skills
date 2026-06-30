@@ -1,0 +1,12 @@
+{
+  "name": "kamal-skills",
+  "description": "Skills for deploying and operating applications with Kamal — grounded in the official Kamal documentation",
+  "version": "1.0.0",
+  "author": {
+    "name": "Donn Felker"
+  },
+  "homepage": "https://github.com/donnfelker/kamal-skills",
+  "repository": "https://github.com/donnfelker/kamal-skills",
+  "license": "MIT",
+  "skills": "./skills"
+}

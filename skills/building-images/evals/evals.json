@@ -1,0 +1,91 @@
+{
+  "skill_name": "building-images",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm on an Apple Silicon Mac but my servers are x86. My Kamal builds are painfully slow. How can I speed them up?",
+      "expected_output": "Should explain that the default cross-build from ARM64 to AMD64 uses local buildx with QEMU emulation, which is slow (especially on the first build). Should recommend configuring a remote AMD64 builder so the AMD64 image is built natively. Should provide a builder block with arch: amd64 and a remote ssh:// connection string. Should note Kamal uses the remote when deploying from an ARM64 machine and builds locally from AMD64, that Docker must be running on the remote host, and that the host should only be shared for builds using the same registry and credentials.",
+      "assertions": [
+        "Explains the default cross-build uses QEMU emulation and is slow",
+        "Recommends a remote builder for the AMD64 architecture",
+        "Provides a builder block with arch and remote keys using an ssh:// connection string",
+        "Notes the remote host must have Docker running",
+        "Does not invent flags, keys, or defaults beyond the documented builder options"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I need to produce an image that runs on both amd64 and arm64 servers. Set up my builder config.",
+      "expected_output": "Should identify this as a multi-arch build. Should provide a builder block with arch as an array of amd64 and arm64 plus a remote connection string. Should explain that when a remote is set, Kamal builds the architecture matching the deployment server locally and the other architecture remotely. Should confirm amd64 and arm64 are the allowed arch values.",
+      "assertions": [
+        "Sets arch to an array containing amd64 and arm64",
+        "Includes a remote builder connection string",
+        "Explains Kamal builds the matching arch locally and the other arch remotely",
+        "States amd64 and arm64 are the allowed architecture values"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "My Dockerfile needs a GITHUB_TOKEN to install private gems. How do I pass that into the Kamal build safely?",
+      "expected_output": "Should use a build secret rather than a build arg. Should set GITHUB_TOKEN in .kamal/secrets, then list it under builder.secrets in config/deploy.yml. Should show referencing it in the Dockerfile with RUN --mount=type=secret,id=GITHUB_TOKEN so the token is not baked into a layer. Should mention that build secret values are read from .kamal/secrets, and may cross-reference the secrets skill for sourcing the value.",
+      "assertions": [
+        "Uses builder.secrets rather than builder.args for the token",
+        "Stores the secret in .kamal/secrets",
+        "Shows a Dockerfile RUN --mount=type=secret,id=GITHUB_TOKEN reference",
+        "States build secret values are read from .kamal/secrets",
+        "May cross-reference the secrets skill"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "ok how do I actually build and push the image to my registry with kamal?",
+      "expected_output": "Should answer with kamal build push to build and push the app image to the registry. May mention kamal build pull to pull it onto servers, or kamal build deliver to do both. Should note that by default Kamal only builds committed files via a git archive of HEAD, and that the image is tagged with the Git version hash and latest. May note these build commands are normally invoked by kamal deploy.",
+      "assertions": [
+        "Recommends kamal build push to build and push to the registry",
+        "Notes Kamal builds only committed files (git archive of HEAD) by default",
+        "Mentions the image is tagged with the Git hash and latest, or references build pull/deliver",
+        "Does not invent build subcommands not in the docs"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "I keep changing files and rebuilding but Kamal doesn't seem to pick up my uncommitted changes. What's going on?",
+      "expected_output": "Should explain that by default Kamal builds a git archive of HEAD, so only committed files are included. Should offer the documented options: commit the changes, set builder.context to . (or another path) to build from the local checkout instead, or use kamal build dev, which builds from the working directory, tags it as dirty, and pushes to the local image store.",
+      "assertions": [
+        "Explains the default build uses a git archive of HEAD (only committed files)",
+        "Suggests setting builder.context to . to build the local checkout",
+        "Mentions kamal build dev builds from the working directory and tags it dirty",
+        "Notes kamal build dev pushes to the local image store"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Can I add a build cache to my multistage Docker build to make Kamal builds faster?",
+      "expected_output": "Should confirm Kamal supports multistage build cache and that the type must be either gha or registry. Should show a builder.cache block. Should note the registry cache image is only used for the registry cache and is not compatible with the Docker driver, and that the default cache image name is <image>-build-cache. For GHA, may mention setting up buildx and exposing the cache authentication in the GitHub Actions workflow.",
+      "assertions": [
+        "States cache type must be either gha or registry",
+        "Provides a builder.cache block with a type",
+        "Notes the registry cache image is not compatible with the Docker driver",
+        "Does not claim cache types other than gha and registry"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "We don't have a Dockerfile. Can Kamal still build our app image, and what does that config look like?",
+      "expected_output": "Should explain the image can be built with Cloud Native Buildpacks via the pack option instead of a Dockerfile and the default docker build process. Should show a builder.pack block with a builder (e.g. heroku/builder:24) and a buildpacks list (e.g. heroku/ruby, heroku/procfile). May mention a project.toml descriptor file for additional buildpack customization.",
+      "assertions": [
+        "Explains pack builds with Cloud Native Buildpacks instead of a Dockerfile",
+        "Shows a builder.pack block with builder and buildpacks keys",
+        "Uses a documented buildpack example such as heroku/builder:24 with heroku/ruby and heroku/procfile",
+        "May mention a project.toml descriptor for customization"
+      ],
+      "files": []
+    }
+  ]
+}

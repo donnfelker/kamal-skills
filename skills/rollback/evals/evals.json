@@ -1,0 +1,78 @@
+{
+  "skill_name": "rollback",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "The latest deploy broke production. Can you roll it back to the previous version?",
+      "expected_output": "Should list the available rollback targets first with `kamal app containers -q`, explaining the output is like `kamal app details` but includes all old containers. Should identify the previous version by its Git version hash (the image tag, also shown at the end of the container name). Should run `kamal rollback [VERSION]` with that hash. Should explain that this stops the current container and starts a new container running the same image as the target, and that nothing is downloaded from the registry. Should suggest verifying with `kamal app version`.",
+      "assertions": [
+        "Uses `kamal app containers -q` to find rollback targets",
+        "Identifies the version as the Git version hash / image tag",
+        "Runs `kamal rollback [VERSION]` with the chosen hash",
+        "Explains it stops the current container and starts the previous image",
+        "States nothing is downloaded from the registry",
+        "Suggests verifying the running version with `kamal app version`"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "How do I see which versions are actually available to roll back to?",
+      "expected_output": "Should explain that `kamal app containers -q` lists old containers available for rollback, giving a presentation similar to `kamal app details` but including all old containers. Should explain how to read the output: the version is the image tag (the Git version hash), which also appears at the end of the container name, and STATUS shows which container is currently Up versus an Exited previous container. Should not invent additional flags.",
+      "assertions": [
+        "Recommends `kamal app containers -q`",
+        "Notes the output is like `kamal app details` plus all old containers",
+        "Explains the version is the image tag / Git version hash visible in the container name",
+        "Does not invent flags or subcommands not in the docs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "how do I check what version of my app is currently running on the servers?",
+      "expected_output": "Should recommend `kamal app version`, which shows the app version currently running on servers. Should distinguish this from `kamal version`, which returns the installed Kamal CLI version, not the app version. May mention `kamal app containers -q` as a way to see the running container and its version hash.",
+      "assertions": [
+        "Recommends `kamal app version` for the running app version",
+        "Distinguishes `kamal app version` from `kamal version` (the Kamal CLI version)",
+        "Does not confuse the app version with the Kamal install version"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I shipped a bad release about 10 days ago that I now realize I want to revert to a build from before that. Can I just roll back to it?",
+      "expected_output": "Should warn that old containers are pruned by default after 3 days when you run `kamal deploy`, so a build that old has very likely been pruned and is no longer on the servers. Should explain that rollback only works when the target image/container is still present (nothing is downloaded from the registry). Should recommend checking `kamal app containers -q` to see what is actually still available, and if the target is gone, redeploying that Git version instead (deploying skill).",
+      "assertions": [
+        "Warns that old containers are pruned after 3 days by default on `kamal deploy`",
+        "Explains rollback needs the target image/container still present on the servers",
+        "Recommends `kamal app containers -q` to confirm what is still available",
+        "Suggests redeploying the version (deploying skill) if it has been pruned"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Walk me through rolling back to a specific previous image by its git hash, start to finish.",
+      "expected_output": "Should give an ordered walkthrough: (1) list candidates with `kamal app containers -q`; (2) identify the target version as the Git version hash from the image tag / container name, choosing one whose STATUS was healthy; (3) run `kamal rollback <hash>`, explaining Kamal stops the current container and starts a new one on the target image with no registry download; (4) verify with `kamal app version` or `kamal app containers -q`.",
+      "assertions": [
+        "Provides an ordered, step-by-step walkthrough",
+        "Step to list containers with `kamal app containers -q`",
+        "Step to pick the version hash from the image tag / container name",
+        "Runs `kamal rollback <hash>` and explains the stop-current / start-previous behavior",
+        "Includes a verification step (`kamal app version` or `kamal app containers -q`)"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "what version of kamal do I have installed?",
+      "expected_output": "Should answer with `kamal version`, which returns the installed Kamal version (for example, 2.12.0). Should not conflate this with the deployed app version (`kamal app version`).",
+      "assertions": [
+        "Recommends `kamal version`",
+        "States it returns the installed Kamal CLI version",
+        "Does not confuse it with `kamal app version` (the running app version)"
+      ],
+      "files": []
+    }
+  ]
+}

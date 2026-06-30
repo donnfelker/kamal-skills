@@ -1,0 +1,96 @@
+{
+  "skill_name": "accessories",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to run MySQL for my Kamal app. How do I add it as an accessory and start it?",
+      "expected_output": "Should suggest reading config/deploy.yml and .kamal/secrets first. Should add the service under the top-level accessories: key with an image (e.g. mysql:8.0) and a host selector (one of host/hosts/role/roles/tag/tags). Should recommend persisting data with a directories or volumes mount and passing credentials via env (clear/secret). Should explain that the accessory is not started by kamal deploy and must be booted with `kamal accessory boot mysql`. Should mention verifying with details/logs.",
+      "assertions": [
+        "Suggests reading existing config/deploy.yml and .kamal/secrets",
+        "Defines the accessory under the accessories: key with image and a host selector",
+        "Specifies exactly one of host/hosts/role/roles/tag/tags",
+        "Recommends persisting data via directories or volumes",
+        "Notes accessories are not started by kamal deploy",
+        "Uses `kamal accessory boot` to start it"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "i changed the redis image version in my config. how do i push the update to the running accessory?",
+      "expected_output": "Should trigger on casual phrasing. Should explain that accessories are not updated by kamal deploy. Should instruct the user to update the image: in the config and run `kamal accessory reboot redis`. Should note that reboot stops, removes, and starts a new container, causing brief downtime since accessories are not proxied. Should NOT claim a zero-downtime accessory update exists.",
+      "assertions": [
+        "States accessories are not updated when you deploy",
+        "Uses `kamal accessory reboot` to apply the new image",
+        "Explains reboot stops, removes, and starts a new container",
+        "Mentions the brief downtime / not zero-downtime",
+        "Does not invent a zero-downtime accessory update flow"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "How do I make sure my Postgres accessory data survives a container reboot? And where should I put the database password?",
+      "expected_output": "Should explain that durable data must be mounted from the host, using directories (created on the host before mounting) or volumes (not created/copied first), since removing or rebooting a container otherwise loses data. Should show a directories or volumes mapping for the data path. For the password, should use env with the value listed under secret: and resolved from .kamal/secrets, noting secrets are stored in an env file on the host. Should cross-reference the environment-variables and secrets skills.",
+      "assertions": [
+        "Recommends a directories or volumes mount for persistence",
+        "Explains directories are created on the host before mounting",
+        "Distinguishes volumes as not created/copied before mounting",
+        "Puts the password under env secret: resolved from .kamal/secrets",
+        "Cross-references environment-variables and/or secrets skills",
+        "Does not invent config keys for persistence"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "What's the difference between kamal accessory reboot, restart, stop, and remove? I don't want to nuke my data by accident.",
+      "expected_output": "Should accurately describe each: reboot stops the container, removes it, and starts a new one; restart restarts the existing container; stop stops the existing container (and start starts it again); remove deletes the container, image, AND the data directory from the host. Should warn that remove is destructive because it deletes the data directory. Should not fabricate flags or behaviors beyond the documented descriptions.",
+      "assertions": [
+        "Describes reboot as stop + remove + start new container",
+        "Describes restart as restarting the existing container",
+        "Describes stop/start as stopping/starting the existing container",
+        "Warns that remove deletes the container, image, and data directory",
+        "Flags remove as the destructive option for data",
+        "Does not invent undocumented flags or behaviors"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Can I run an accessory on a server that isn't in my Kamal servers list? And how do I boot all of my accessories at once?",
+      "expected_output": "Should confirm that accessory hosts do not need to be defined in the Kamal servers configuration, and that an accessory can run on a single host, a list of hosts, or specific roles via host/hosts/role/roles/tag/tags. To boot everything, should use `kamal accessory boot all`. May note that details/remove/reboot also accept NAME=all.",
+      "assertions": [
+        "Confirms accessory hosts need not be in the servers configuration",
+        "Mentions host/hosts/role/roles/tag/tags as the placement selectors",
+        "Uses `kamal accessory boot all` to boot every accessory",
+        "Does not require the host to appear under servers:"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "I need to open a shell into my mysql accessory to check something, and I want to tail its logs. What commands do I run?",
+      "expected_output": "Should use `kamal accessory exec mysql [CMD...]` to run a command within the accessory container, noting --help shows its options. Should use `kamal accessory logs mysql` to show log lines, noting --help shows options. May mention `kamal accessory details mysql` for status. Should not invent flags not documented.",
+      "assertions": [
+        "Uses `kamal accessory exec` to run a command in the container",
+        "Uses `kamal accessory logs` to view logs",
+        "Notes that exec and logs accept --help for options",
+        "Does not fabricate undocumented flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "We're upgrading our Kamal setup from 1.x to 2.0 and the accessories need to move networks. Is there a command for that?",
+      "expected_output": "Should point to `kamal accessory upgrade`, which upgrades accessories from Kamal 1.x to 2.0 by restarting them in the 'kamal' network. Should note that the default accessory network is kamal. Should not invent additional migration steps or flags beyond what is documented.",
+      "assertions": [
+        "Identifies `kamal accessory upgrade` as the command",
+        "States it migrates accessories from Kamal 1.x to 2.0",
+        "Mentions restarting them in the kamal network",
+        "Does not invent extra migration flags or steps"
+      ],
+      "files": []
+    }
+  ]
+}

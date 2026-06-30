@@ -1,0 +1,19 @@
+{
+  "name": "kamal-skills",
+  "owner": {
+    "name": "Donn Felker",
+    "url": "https://donnfelker.com"
+  },
+  "metadata": {
+    "description": "Kamal deployment skills for AI agents — deploy, configure, operate, and upgrade apps with Kamal, grounded in the official Kamal documentation",
+    "version": "1.0.0",
+    "repository": "https://github.com/donnfelker/kamal-skills"
+  },
+  "plugins": [
+    {
+      "name": "kamal-skills",
+      "description": "21 skills for deploying and operating apps with Kamal: getting started and install, configuration, deploying, building images, rollback, servers and roles, environment variables, secrets, registry, proxy, accessories, SSH, cron, booting, logging, app operations, hooks, pruning, aliases, removal, and upgrading 1.x to 2.0 — all grounded in the official Kamal docs",
+      "source": "./"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "skill_name": "hooks",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to send a notification to our team chat every time I deploy with Kamal. How do I set that up?",
+      "expected_output": "Should suggest checking the existing .kamal/hooks folder and config/deploy.yml first. Should identify the post-deploy hook as the right one, since it runs after a deploy, redeploy, or rollback. Should explain the script goes in .kamal/hooks/post-deploy with no file extension, needs a shebang and to be executable. Should show using KAMAL_* env vars like KAMAL_PERFORMER and KAMAL_VERSION in the message (and may mention KAMAL_RUNTIME for the deploy duration, which only post-deploy receives). Should give a curl-style example posting to a chat endpoint. Should not invent hooks or env vars.",
+      "assertions": [
+        "Identifies the post-deploy hook as appropriate",
+        "Notes post-deploy runs after a deploy, redeploy, or rollback",
+        "States the script is named .kamal/hooks/post-deploy with no extension",
+        "Uses KAMAL_* env vars such as KAMAL_PERFORMER and KAMAL_VERSION",
+        "Mentions KAMAL_RUNTIME is available to post-deploy for the deploy duration",
+        "Does not invent unsupported hooks or environment variables"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Can I make my deploy fail automatically if there are uncommitted changes or CI hasn't passed?",
+      "expected_output": "Should explain that a hook script which exits with a non-zero code aborts the command. Should recommend the pre-build hook for ensuring no uncommitted changes, and pre-deploy or pre-build for checking CI passed. Should show an example script in .kamal/hooks that exits 1 on failure. Should note the filename is the hook name with no extension. Should not claim any hook auto-checks Git or CI on its own — the script does the check.",
+      "assertions": [
+        "Explains a non-zero exit code aborts the command",
+        "Recommends pre-build (and/or pre-deploy) for these checks",
+        "Shows a hook script that exits non-zero on failure",
+        "Notes hook files are named after the hook with no extension",
+        "Does not invent built-in CI/Git checks"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "what KAMAL_ environment variables can my hooks read? i need the version and who ran the deploy",
+      "expected_output": "Should list the KAMAL_* variables available to hooks, including KAMAL_VERSION (full version being deployed) and KAMAL_PERFORMER (the local user from whoami). Should mention others like KAMAL_RECORDED_AT, KAMAL_SERVICE, KAMAL_SERVICE_VERSION, KAMAL_HOSTS, KAMAL_COMMAND, and the optional KAMAL_SUBCOMMAND, KAMAL_DESTINATION, and KAMAL_ROLE. May note KAMAL_RUNTIME is specific to post-deploy. Should not invent variables that are not documented.",
+      "assertions": [
+        "Identifies KAMAL_VERSION as the full version being deployed",
+        "Identifies KAMAL_PERFORMER as the local user (from whoami)",
+        "Lists additional documented KAMAL_* variables",
+        "Notes KAMAL_RUNTIME is specific to the post-deploy hook",
+        "Does not invent undocumented KAMAL_* variables"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I keep my hook scripts in a shared folder outside .kamal, and my pre-build hook output is too noisy. Can I change where hooks live and quiet down just that one?",
+      "expected_output": "Should point to two config/deploy.yml keys. hooks_path changes the hooks folder (defaults to .kamal/hooks). hooks_output controls visibility, set globally or per-hook, with values :quiet (hidden) and :verbose (shown). Should show the per-hook form quieting pre-build. Should note CLI flags -v/-q override these settings and that failed hooks always show output regardless.",
+      "assertions": [
+        "Uses hooks_path to relocate the hooks folder (default .kamal/hooks)",
+        "Uses hooks_output with :quiet / :verbose values",
+        "Shows the per-hook hooks_output form for pre-build",
+        "Notes CLI -v/-q flags override the setting and failed hooks always show output"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "We're upgrading kamal-proxy and want a zero-downtime reboot by pulling each server out of our load balancer first. How?",
+      "expected_output": "Should recommend the pre-proxy-reboot and post-proxy-reboot hooks around kamal proxy reboot. Should explain pre-proxy-reboot can disable the current server in an external load balancer, and with the --rolling flag (kamal proxy reboot --rolling) the hook is called once per server with KAMAL_HOSTS containing the current server, enabling a zero-downtime reboot. Should explain post-proxy-reboot re-enables the server. Should not invent flags beyond --rolling.",
+      "assertions": [
+        "Recommends pre-proxy-reboot and post-proxy-reboot hooks",
+        "Ties them to kamal proxy reboot",
+        "Mentions the --rolling flag for a zero-downtime reboot",
+        "States that with a rolling reboot the hook runs once per server with KAMAL_HOSTS as the current server",
+        "States post-proxy-reboot re-enables the server",
+        "Does not invent unsupported flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "I'm brand new to Kamal hooks. Where do they live, what are they called, and how do I create one?",
+      "expected_output": "Should explain hooks live in the .kamal/hooks folder by default and that kamal init creates that folder with sample scripts. Should state the hook filename must be the hook name with no extension (e.g. pre-deploy, not pre-deploy.sh or pre-deploy.rb). Should mention the script needs a shebang and to be executable since Kamal runs it directly. May list the available hook names. Should note a non-zero exit aborts the command.",
+      "assertions": [
+        "States hooks live in .kamal/hooks by default",
+        "Notes kamal init creates the folder with sample scripts",
+        "States the filename is the hook name with no extension",
+        "Mentions a non-zero exit code aborts the command",
+        "Lists or references the available hook names"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Just this once I need to deploy without running any of my hooks. And do hooks run during a build too?",
+      "expected_output": "Should give --skip-hooks (-H) to run a command without its hooks, e.g. kamal deploy --skip-hooks. Should confirm hooks run during builds: the pre-connect and pre-build hooks run as part of the build step. Should not invent additional skip flags.",
+      "assertions": [
+        "Provides --skip-hooks (or -H) to run without hooks",
+        "Confirms pre-connect and pre-build hooks run during the build",
+        "Does not invent additional skip-related flags"
+      ],
+      "files": []
+    }
+  ]
+}

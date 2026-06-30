@@ -1,0 +1,100 @@
+{
+  "skill_name": "ssh",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Kamal should deploy as a non-root user called 'app' instead of root. How do I set that up?",
+      "expected_output": "Should explain that Kamal defaults to the root user on port 22 and that the SSH user is set with `user:` under the `ssh:` block in config/deploy.yml (e.g. `user: app`). Should warn that a non-root user may need the servers bootstrapped manually first so the user can run Docker, and should reference the Ubuntu bootstrap steps (apt update/upgrade, install docker.io curl git, usermod -a -G docker app). Should suggest verifying with `kamal config`.",
+      "assertions": [
+        "States the default SSH user is root",
+        "Sets the user via `user:` under the `ssh:` block",
+        "Warns a non-root user may need manual server bootstrapping",
+        "References adding the user to the docker group / installing Docker",
+        "Suggests verifying the resolved config with kamal config",
+        "Does not invent SSH config keys beyond those documented"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "my servers are behind a bastion, kamal can't reach them directly. how do i tell it to jump through the bastion host?",
+      "expected_output": "Should triggers on casual phrasing. Should explain the `proxy:` key under `ssh:`, in the form `<host>` or `<user>@<host>` (e.g. `proxy: root@proxy-host`). Should mention `proxy_command:` as the custom-command alternative required for older SSH versions (e.g. `ssh -W %h:%p user@proxy`). May note that `forward_agent: false` is needed when the jump host does not support agent forwarding.",
+      "assertions": [
+        "Triggers on casual phrasing",
+        "Uses the `proxy:` key under the `ssh:` block",
+        "Shows the `<host>` or `<user>@<host>` form for proxy",
+        "Mentions `proxy_command` for older SSH versions",
+        "Optionally notes forward_agent: false for jump hosts without agent forwarding",
+        "Does not invent unsupported proxy options"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Deploys fail with 'Permission denied (publickey)' and sometimes 'Too many authentication failures'. My ssh-agent has a lot of keys loaded. How do I fix this with Kamal?",
+      "expected_output": "Should explain that `keys_only: true` makes Kamal use only the private keys from `keys` and `key_data` even when ssh-agent offers more identities, which addresses 'too many authentication failures'. Should recommend pointing `keys:` at the specific private key file. Should recommend setting `log_level: debug` (default is fatal) to diagnose the SSH negotiation, and running `kamal config` to confirm the resolved user, port, and keys.",
+      "assertions": [
+        "Recommends `keys_only: true` to restrict to configured keys",
+        "Explains keys_only ignores extra ssh-agent identities",
+        "Recommends specifying the key file with `keys:`",
+        "Recommends `log_level: debug` for diagnosis and notes the default is fatal",
+        "Suggests kamal config to verify resolved SSH options",
+        "Does not invent authentication flags"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "We're rolling Kamal out across about 60 servers and we're seeing SSH connection storms and DNS lookup failures during deploys. What can I tune?",
+      "expected_output": "Should identify this as SSHKit tuning under the `sshkit:` block and note the defaults are fine for most cases but may need adjusting for many hosts. Should explain `max_concurrent_starts` (default 30) to cap concurrent connection starts, `pool_idle_timeout` (default 900 seconds, kept long to avoid re-connection storms after idle periods like image builds or CI), and `dns_retries` (default 3 retries after the initial attempt; resolvers like systemd-resolved, mDNSResponder, or Tailscale can drop lookups during bursts; 0 disables).",
+      "assertions": [
+        "Identifies the `sshkit:` block as the place to tune",
+        "Explains `max_concurrent_starts` with default of 30",
+        "Explains `pool_idle_timeout` with default of 900 seconds",
+        "Explains `dns_retries` with default of 3 and that 0 disables it",
+        "Mentions resolvers (systemd-resolved, mDNSResponder, Tailscale) dropping lookups during bursts",
+        "Does not invent SSHKit keys beyond those documented"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "our ssh runs on port 2222 not 22. where do I put that in the kamal config?",
+      "expected_output": "Should explain the SSH port defaults to 22 and is set with `port:` under the `ssh:` block (the docs show it as a quoted string, e.g. `port: \"2222\"`). Should locate this in config/deploy.yml. May suggest confirming with `kamal config`.",
+      "assertions": [
+        "States the default port is 22",
+        "Sets the port via `port:` under the `ssh:` block in config/deploy.yml",
+        "Shows the value (e.g. \"2222\"), matching the documented quoted-string form",
+        "Does not invent other connection keys"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "In CI I don't want the SSH private key written to disk. Can Kamal read the deploy key from a secret instead?",
+      "expected_output": "Should explain `key_data:` under the `ssh:` block, which is an array where each element is a secret name (resolved from .kamal/secrets), e.g. `- SSH_PRIVATE_KEY`. Should contrast with `keys:` which references key files on disk. Should note that a raw PEM string is also accepted in key_data but is deprecated.",
+      "assertions": [
+        "Recommends `key_data:` under the `ssh:` block",
+        "Explains each key_data element is a secret name",
+        "References secrets being resolved from .kamal/secrets",
+        "Contrasts key_data with `keys:` (files on disk)",
+        "Notes raw PEM in key_data is deprecated",
+        "Does not invent secret-handling behavior"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "We connect to our hosts through Cloudflare Access for Infrastructure over SSH and Kamal keeps trying to forward the agent. How do I turn that off?",
+      "expected_output": "Should explain that `forward_agent` controls whether the local SSH agent is forwarded to the remote host and defaults to true (SSHKit's default). Should recommend setting `forward_agent: false` under the `ssh:` block for jump hosts or tunnels that do not support agent forwarding, citing Cloudflare Access for Infrastructure with SSH as the documented example.",
+      "assertions": [
+        "Explains `forward_agent` controls SSH agent forwarding",
+        "States it defaults to true",
+        "Recommends `forward_agent: false` under the `ssh:` block",
+        "Ties it to jump hosts/tunnels that don't support agent forwarding (e.g. Cloudflare Access for Infrastructure)",
+        "Does not invent unrelated options"
+      ],
+      "files": []
+    }
+  ]
+}
