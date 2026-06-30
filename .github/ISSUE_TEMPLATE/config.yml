@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Agent Skills Specification
+    url: https://agentskills.io/specification.md
+    about: Learn the skill format before creating or requesting a skill
+  - name: Kamal Documentation
+    url: https://kamal-deploy.org
+    about: The official Kamal docs that every skill is grounded in
+  - name: Contributing Guide
+    url: https://github.com/donnfelker/kamal-skills/blob/main/CONTRIBUTING.md
+    about: How to contribute a new skill to this repository
