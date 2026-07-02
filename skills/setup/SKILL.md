@@ -78,6 +78,17 @@ Created sample hooks in .kamal/hooks
 | `.kamal/secrets` | Secrets referenced by the config |
 | `.kamal/hooks` | Sample lifecycle hooks |
 
+> **No Dockerfile yet?** Kamal builds the standard `Dockerfile` at your project root.
+> Rails generates one with `rails new`; most other frameworks (Node/Next.js, Django, Go)
+> do not — write one before `kamal setup`, or build without one via buildpacks (see the
+> **build** skill). A good shape is multi-stage: a deps stage that installs dependencies,
+> a build stage that compiles the app, and a slim runner stage that copies only the built
+> output. Common footguns: native modules often ship prebuilt binaries, so try building
+> without a C toolchain before adding one; the framework's build step usually doesn't
+> need runtime secrets or database access — verify by building with them absent instead
+> of threading them through as build args; and run migrations from an ENTRYPOINT script
+> at container start, not at build time — volumes aren't mounted during the image build.
+
 ---
 
 ## Step 3: Write `config/deploy.yml`
@@ -114,6 +125,24 @@ What each key does:
 
 The default registry is Docker Hub; you can change it with `registry/server`.
 For every available configuration key, see the **config** skill.
+
+### Persisting data across deploys
+
+Every deploy **replaces the app container** — anything written to the container's own
+filesystem (a SQLite database, uploaded files, anything else meant to persist) is
+discarded with the old container. Mount a named volume for any path that must survive:
+
+```yaml
+volumes:
+  - "myapp_data:/app/data"
+```
+
+Point your app's writable paths at the mounted directory (e.g.
+`DATABASE_URL=file:/app/data/production.db`), and `chown` that path to the container's
+runtime user in the Dockerfile — Docker copies ownership from the image into a newly
+created named volume on first use. Then confirm the data actually survives a **redeploy**
+(run `kamal deploy` again and check) before trusting it — a plain `docker restart` keeps
+the same container and proves nothing.
 
 ---
 

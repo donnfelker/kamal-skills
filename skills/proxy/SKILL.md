@@ -93,6 +93,8 @@ Automatic SSL has requirements:
 
 When `ssl: true`, kamal-proxy **stops forwarding headers** to your app unless you explicitly set `forward_headers: true`. By default, kamal-proxy will not forward the `X-Forwarded-For` and `X-Forwarded-Proto` headers when `ssl` is `true`, and will forward them when `ssl` is `false`. Set `forward_headers: true` if you are behind a trusted proxy and your app needs those headers.
 
+**Host-header trust:** Separately from forwarded headers, some frameworks validate the raw `Host` header against an allowlist and reject requests arriving through kamal-proxy until explicitly told to trust it — Rails' `config.hosts`, Django's `ALLOWED_HOSTS`, Auth.js/NextAuth's `trustHost: true` (required for any deploy outside Vercel). The symptom is an `UntrustedHost`-style error or an unexplained redirect loop on auth routes right after deploying, even though the app worked when run directly without the proxy. Add the deployed host to the framework's allowlist alongside setting `proxy.host`.
+
 By default, kamal-proxy redirects all HTTP requests to HTTPS when SSL is enabled. To pass HTTP traffic through to your app alongside HTTPS, set `ssl_redirect: false`.
 
 **Custom certificate instead of Let's Encrypt:** If you can't use Let's Encrypt — for example, you deploy from more than one host, or you already have a certificate from another CA — load the certificate from secrets by mapping `certificate_pem` and `private_key_pem` to secret names:
