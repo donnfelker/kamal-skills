@@ -81,8 +81,19 @@ Automatic SSL has requirements:
 - You must be deploying to **one server**, and the `host` option must be set.
 - The `host` value must point to the server you are deploying to.
 - Port **443** must be open for the Let's Encrypt challenge to succeed.
+- The host's DNS must resolve **directly to the server** during issuance. If it is
+  proxied through a CDN (Cloudflare's **orange cloud**, etc.), the Let's Encrypt HTTP-01
+  challenge reaches the CDN instead of kamal-proxy and issuance fails or loops. Point an
+  **A record at the server IP in "DNS only" (grey cloud)** mode — not a CNAME to the CDN.
+  kamal-proxy also **auto-renews** the certificate using the same HTTP-01 challenge, so the
+  record must **stay** grey-cloud the whole time `ssl: true` is set — re-enabling the orange
+  cloud later silently breaks renewal ~60 days on. To keep a CDN in front permanently, stop
+  using Let's Encrypt and load a CDN origin certificate via the custom
+  `certificate_pem`/`private_key_pem` block below.
 
 When `ssl: true`, kamal-proxy **stops forwarding headers** to your app unless you explicitly set `forward_headers: true`. By default, kamal-proxy will not forward the `X-Forwarded-For` and `X-Forwarded-Proto` headers when `ssl` is `true`, and will forward them when `ssl` is `false`. Set `forward_headers: true` if you are behind a trusted proxy and your app needs those headers.
+
+**Host-header trust:** Separately from forwarded headers, some frameworks validate the raw `Host` header against an allowlist and reject requests arriving through kamal-proxy until explicitly told to trust it — Rails' `config.hosts`, Django's `ALLOWED_HOSTS`, Auth.js/NextAuth's `trustHost: true` (required for any deploy outside Vercel). The symptom is an `UntrustedHost`-style error or an unexplained redirect loop on auth routes right after deploying, even though the app worked when run directly without the proxy. Add the deployed host to the framework's allowlist alongside setting `proxy.host`.
 
 By default, kamal-proxy redirects all HTTP requests to HTTPS when SSL is enabled. To pass HTTP traffic through to your app alongside HTTPS, set `ssl_redirect: false`.
 

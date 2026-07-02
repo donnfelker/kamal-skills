@@ -15,7 +15,7 @@ Read what already exists before asking questions:
 
 1. **`config/deploy.yml`** — look for an existing `builder:` block, the `image:` name, and the `registry:` it pushes to.
 2. **`.kamal/secrets`** — if the build needs a secret (like `GITHUB_TOKEN`), it is read from here.
-3. **`Dockerfile`** — confirm there is one (the default build path uses it), or whether the user wants buildpacks instead.
+3. **`Dockerfile`** — confirm there is one (the default build path uses it), or whether the user wants buildpacks instead. If there is none and buildpacks aren't wanted, help the user write one first — see the "No Dockerfile yet?" callout in the **setup** skill for the multi-stage shape and common footguns.
 
 The `builder` configuration controls how the application is built with `docker build`. All options go under the `builder` key in the root configuration.
 
