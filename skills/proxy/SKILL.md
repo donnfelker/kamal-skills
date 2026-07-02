@@ -81,6 +81,15 @@ Automatic SSL has requirements:
 - You must be deploying to **one server**, and the `host` option must be set.
 - The `host` value must point to the server you are deploying to.
 - Port **443** must be open for the Let's Encrypt challenge to succeed.
+- The host's DNS must resolve **directly to the server** during issuance. If it is
+  proxied through a CDN (Cloudflare's **orange cloud**, etc.), the Let's Encrypt HTTP-01
+  challenge reaches the CDN instead of kamal-proxy and issuance fails or loops. Point an
+  **A record at the server IP in "DNS only" (grey cloud)** mode — not a CNAME to the CDN.
+  kamal-proxy also **auto-renews** the certificate using the same HTTP-01 challenge, so the
+  record must **stay** grey-cloud the whole time `ssl: true` is set — re-enabling the orange
+  cloud later silently breaks renewal ~60 days on. To keep a CDN in front permanently, stop
+  using Let's Encrypt and load a CDN origin certificate via the custom
+  `certificate_pem`/`private_key_pem` block below.
 
 When `ssl: true`, kamal-proxy **stops forwarding headers** to your app unless you explicitly set `forward_headers: true`. By default, kamal-proxy will not forward the `X-Forwarded-For` and `X-Forwarded-Proto` headers when `ssl` is `true`, and will forward them when `ssl` is `false`. Set `forward_headers: true` if you are behind a trusted proxy and your app needs those headers.
 

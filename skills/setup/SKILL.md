@@ -29,6 +29,9 @@ Then confirm the essentials you will need:
 3. **Image name** — what the built image will be called.
 4. **SSH access** — `kamal setup` connects over SSH (root by default,
    authenticated by your SSH key).
+5. **Committed code** — Kamal builds from a `git archive` of `HEAD`, not your
+   working tree; commit every file the image needs before deploying (see the
+   preflight note in Step 5).
 
 ---
 
@@ -137,6 +140,13 @@ other vaults, see the **secrets** skill.
 ## Step 5: Bootstrap and Deploy with `kamal setup`
 
 With the config and secrets in place, run your first deploy:
+
+> **Preflight — commit first.** Kamal builds from a `git archive` of `HEAD`, not your
+> working tree. Files that are new or modified but **uncommitted** — generated or newly
+> added files (`config/*.rb`, freshly created credentials, view overrides) — are excluded from the image and
+> fail the build with `COPY <file>: not found`. Commit everything the Dockerfile `COPY`s
+> before running `kamal setup`. To build the working tree instead, set `context: .` (see
+> the **build** skill).
 
 ```sh
 kamal setup
