@@ -24,8 +24,44 @@ Before asking the user questions, read what already exists in the repo:
 
 - **`config/deploy.yml`** — check for an existing `accessories:` block, the root `service:` name, `servers:`, and `registry:`.
 - **`.kamal/secrets`** (and `.kamal/secrets-common` / `.kamal/secrets.<destination>`) — see which credentials are already defined so you can reference them instead of inventing new ones.
+- **Any stack definition the app ships** — a production `docker-compose.yml`, Helm chart, or upstream install docs. It is the contract for what to run; see the next section.
 
 Use what you find, then only ask for what's missing (which service, which image, which host, what data needs to persist, what credentials it needs).
+
+## Mirroring an existing stack (docker-compose, Helm, upstream docs)
+
+When the app ships its own stack definition — a production `docker-compose.yml`,
+a Helm chart, upstream install docs — that definition is the contract for what
+the deployment runs. Translate it service-by-service; do not redesign it.
+
+Before writing the `accessories:` block, enumerate every service in the source
+stack and map each one to exactly one of:
+
+1. **A Kamal accessory** — the default for every long-lived service.
+2. **An external or managed service** the user already runs (e.g. RDS instead of
+   a Postgres container).
+3. **An explicit, user-approved omission or substitution** — never a silent one.
+
+Only the user can choose option 3. Never drop, swap, or consolidate a component
+unilaterally — not to save RAM, not to save disk, not for simplicity. A stack
+that looks over-provisioned (a search index, a dedicated database, a metrics
+sidecar) is often load-bearing in ways that only fail at runtime: the upstream
+stack runs it because the app assumes it exists.
+
+If a real constraint makes the faithful translation look wrong — the host seems
+too small, two databases could share an instance, a dev-only tool looks
+pointless in production — **stop and put the decision to the user before
+deploying**:
+
+- State the constraint concretely ("this host has 8 GB RAM; the upstream stack
+  wants Elasticsearch plus two Postgres instances").
+- Present the options, always including the faithful-to-upstream one, with the
+  trade-offs of each.
+- Let the user pick, and record the choice in a comment in `deploy.yml` so the
+  next reader knows the omission was deliberate.
+
+A deploy that fails because the faithful stack exceeded the host is a better
+outcome than one that half-works because a component was quietly removed.
 
 ## Walk-through: add an accessory
 
@@ -235,6 +271,7 @@ The same shape works for a Redis cache, a search service, or any other dependenc
 - **No persistence.** Without a `directories` or `volumes` mount, data is lost when the container is removed (e.g. on `remove` or `reboot`).
 - **Specifying more than one host selector.** Use exactly one of `host`/`hosts`/`role`/`roles`/`tag`/`tags`.
 - **`remove` deletes data.** `kamal accessory remove` removes the container, image, **and the data directory** from the host.
+- **Silently trimming the upstream stack.** If the app's own compose file, Helm chart, or install docs define the stack, every service must map to an accessory, an external service, or a user-approved omission — see "Mirroring an existing stack" above.
 
 ## Related Skills
 
