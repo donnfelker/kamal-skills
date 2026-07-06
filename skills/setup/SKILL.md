@@ -126,6 +126,14 @@ What each key does:
 The default registry is Docker Hub; you can change it with `registry/server`.
 For every available configuration key, see the **config** skill.
 
+> **App ships its own stack definition?** If the project has a production
+> `docker-compose.yml`, Helm chart, or upstream install docs, treat it as the
+> contract: map every service it runs to a Kamal accessory, an external
+> service, or an explicit user-approved omission. Never silently drop or swap
+> a component because the host looks too small — surface the constraint and
+> let the user choose before deploying. See "Mirroring an existing stack" in
+> the **accessories** skill.
+
 ### Persisting data across deploys
 
 Every deploy **replaces the app container** — anything written to the container's own
@@ -206,6 +214,16 @@ Expanded, the first deploy:
 All servers are now serving the app on port 80. If you run a single server,
 you're ready to go. If you run multiple servers, put a load balancer in front of
 them.
+
+> **If `kamal setup` is interrupted** (SSH drop, network reset) partway through:
+> the deploy lock may still be held on the server — check with
+> `kamal lock status`. If the image already built and pushed, resume without
+> rebuilding: `kamal lock release`, boot any accessories that aren't running
+> yet (`kamal accessory boot all`; a name-conflict error for one that already
+> booted is harmless), then `kamal deploy --skip-push` to deploy the
+> already-pushed image. If the failure happened during build or push, just
+> release the lock and rerun `kamal setup`. For lock details, see the
+> **deploy** skill.
 
 ### Bootstrapping Docker separately
 
