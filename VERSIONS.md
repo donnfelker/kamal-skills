@@ -25,8 +25,13 @@ Current versions of all skills. Agents can compare against local versions to che
 | aliases | 1.0.0 | 2026-06-30 |
 | remove | 1.0.0 | 2026-06-30 |
 | upgrade | 1.0.0 | 2026-06-30 |
+| server-hardening | 1.0.0 | 2026-07-06 |
 
 ## Recent Changes
+
+### server-hardening 1.0.0 (2026-07-06)
+
+- Added the `server-hardening` skill — inspects a Kamal server's exposure and guides the user through automated updates, firewall lockdown, and SSH hardening, with an explicit interview, a consent gate before any change, undo instructions, and read-only verification scripts.
 
 ### 1.0.0 (2026-06-30)
 

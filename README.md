@@ -1,6 +1,6 @@
 # Kamal Skills for AI Agents
 
-A collection of AI agent skills for deploying and operating applications with [Kamal](https://kamal-deploy.org). Built for developers and operators who want AI coding agents to help them ship apps to their own servers — covering install and getting started, configuration, deploys, image builds, rollbacks, servers and roles, environment variables, secrets, the registry, the proxy, accessories, SSH, cron, logging, app operations, hooks, pruning, aliases, removal, and upgrading from 1.x to 2.0.
+A collection of AI agent skills for deploying and operating applications with [Kamal](https://kamal-deploy.org). Built for developers and operators who want AI coding agents to help them ship apps to their own servers — covering install and getting started, configuration, deploys, image builds, rollbacks, servers and roles, environment variables, secrets, the registry, the proxy, accessories, SSH, server hardening, cron, logging, app operations, hooks, pruning, aliases, removal, and upgrading from 1.x to 2.0.
 
 Every skill is **grounded in the official Kamal documentation** at [kamal-deploy.org](https://kamal-deploy.org) — no invented commands, flags, config keys, defaults, or behaviors.
 
@@ -76,6 +76,7 @@ Because they follow the cross-agent [Agent Skills spec](https://agentskills.io),
 | [rollback](skills/rollback/) | Roll back a Kamal deployment to a previous image when a release goes bad, and identify or check which versions are... |
 | [rollout](skills/rollout/) | Control how Kamal boots new containers across many servers during a deploy — rolling the release out in batches instead... |
 | [secrets](skills/secrets/) | Manage secrets for a Kamal deployment — the `.kamal/secrets` file, dotenv variable and command substitution, and the... |
+| [server-hardening](skills/server-hardening/) | Inspect a Linux server Kamal deploys to and harden it — automated security updates, firewall/port lockdown, SSH... |
 | [servers](skills/servers/) | Define and structure the servers Kamal deploys to — a simple list of hosts, multiple custom roles (such as web and... |
 | [setup](skills/setup/) | Install Kamal and ship your first deploy on a new project. Use when the user is starting with Kamal for the first time... |
 | [ssh](skills/ssh/) | Configure how Kamal connects to servers over SSH and tune SSHKit connection handling. Use when the user sets the SSH... |
@@ -188,6 +189,7 @@ You can also invoke skills directly:
 - `hooks` - Run scripts at fixed points in a deploy
 - `prune` - Prune old containers/images and tune retention
 - `remove` - Tear down a deployment and log out of the registry
+- `server-hardening` - Inspect and harden a server's firewall, SSH, and update policy
 
 ### Upgrading
 - `upgrade` - Upgrade a Kamal 1.x project to 2.0
