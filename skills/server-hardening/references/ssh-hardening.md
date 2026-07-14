@@ -23,7 +23,7 @@ sudo sshd -t && sudo systemctl reload sshd
 | `PubkeyAuthentication` | `yes` | Confirms key-based auth is enabled (it is by default). |
 | `Port` | a non-default port | Reduces automated scanner noise. Cosmetic only — not a substitute for the above. If changed, `config/deploy.yml`'s `ssh: port:` must match, or Kamal will stop connecting (see the **ssh** skill). |
 
-Edit with `sed`, or open the file directly. Example — disable password auth and restrict root to key-only:
+Prefer `sed` for edits — it keeps changes scriptable and repeatable; editing the file by hand works too. Example — disable password auth and restrict root to key-only:
 
 ```bash
 sudo sed -i \
