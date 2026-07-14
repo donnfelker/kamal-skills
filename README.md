@@ -76,7 +76,7 @@ Because they follow the cross-agent [Agent Skills spec](https://agentskills.io),
 | [rollback](skills/rollback/) | Roll back a Kamal deployment to a previous image when a release goes bad, and identify or check which versions are... |
 | [rollout](skills/rollout/) | Control how Kamal boots new containers across many servers during a deploy — rolling the release out in batches instead... |
 | [secrets](skills/secrets/) | Manage secrets for a Kamal deployment — the `.kamal/secrets` file, dotenv variable and command substitution, and the... |
-| [server-hardening](skills/server-hardening/) | Inspect a Linux server Kamal deploys to and harden it — automated security updates, firewall/port lockdown, SSH... |
+| [server-hardening](skills/server-hardening/) | Inspect a Linux server Kamal deploys to and harden it — automated security updates, firewall/port lockdown,... |
 | [servers](skills/servers/) | Define and structure the servers Kamal deploys to — a simple list of hosts, multiple custom roles (such as web and... |
 | [setup](skills/setup/) | Install Kamal and ship your first deploy on a new project. Use when the user is starting with Kamal for the first time... |
 | [ssh](skills/ssh/) | Configure how Kamal connects to servers over SSH and tune SSHKit connection handling. Use when the user sets the SSH... |
