@@ -8,14 +8,14 @@ Every skill is grounded in the official Kamal docs at [kamal-deploy.org](https:/
 |-------|--------------|
 | `kamal-docs.json` | Maps each skill to the doc pages it depends on (`docs`), and records the kamal-site commit and Kamal version it was last verified against (`verified`). Pages listed in `ignore` are index pages no skill needs. |
 | `.github/scripts/check-kamal-docs.js` | Compares each skill's verified commit to the current docs and reports changed pages per skill, new or removed pages, links a skill cites but does not track, and new Kamal versions. |
-| `.github/workflows/check-kamal-docs.yml` | Runs the check every Monday (and on demand). Opens or updates an issue labeled `kamal-docs-drift` with the report, and closes it once everything is synced. |
+| `.github/workflows/check-kamal-docs.yml` | Runs the check nightly (and on demand). Opens or updates an issue labeled `kamal-docs-drift` with the report, and closes it once everything is synced. |
 | `VERSIONS.md` | The **Kamal Docs** column shows which Kamal version and docs commit each skill was verified against. `--mark-synced` rewrites it. |
 
 The Kamal version comes from the site's own `_data/github.yml`, so it reflects what the docs describe, which can lag a gem release by a few days. The report notes when that happens.
 
 ## Cadence
 
-1. **Weekly, automatic:** the workflow runs Mondays at 13:00 UTC. Watch for `kamal-docs-drift` issues.
+1. **Nightly, automatic:** the workflow runs every night at 06:00 UTC. While drift remains, it updates the same `kamal-docs-drift` issue instead of opening new ones.
 2. **On a Kamal release:** run the check by hand (Actions > Check Kamal Docs > Run workflow, or locally) once the site publishes its docs update.
 3. **Before a skills release:** run the check so you never ship against stale docs.
 

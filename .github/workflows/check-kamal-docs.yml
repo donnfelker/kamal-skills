@@ -1,12 +1,12 @@
 name: Check Kamal Docs
 
-# Weekly check of the skills against the official Kamal docs (basecamp/kamal-site).
+# Nightly check of the skills against the official Kamal docs (basecamp/kamal-site).
 # Opens or updates a "kamal-docs-drift" issue when docs the skills depend on change,
 # and closes it once every skill is marked synced again.
 
 on:
   schedule:
-    - cron: "0 13 * * 1" # Mondays 13:00 UTC
+    - cron: "0 6 * * *" # Nightly 06:00 UTC
   workflow_dispatch:
 
 concurrency:
