@@ -176,6 +176,17 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) specific
 GITHUB_TOKEN=$(gh auth token) node .github/scripts/check-kamal-docs.js
 ```
 
+After updating skills, record the new baseline with `--mark-synced`:
+
+```bash
+GITHUB_TOKEN=$(gh auth token) node .github/scripts/check-kamal-docs.js --mark-synced --skills deploy,proxy
+```
+
+- Only mark skills you verified against the current docs. Pass `--skills`; omit it only when every skill was checked.
+- Run it after the skill edits and version bumps, and after the user has reviewed the proposed changes.
+- It rewrites `kamal-docs.json` and the Kamal Docs column in `VERSIONS.md`. Commit both. Never edit the `verified` entries by hand.
+- A skill whose pages changed but needed no edit still gets marked, so the report stays clean.
+
 When you add a skill, add an entry for it in `kamal-docs.json` listing every doc page it relies on, then run the script with `--mark-synced --skills <name>`.
 
 ## Checking for Updates
