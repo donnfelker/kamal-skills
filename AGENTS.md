@@ -27,9 +27,11 @@ kamal-skills/
 │   └── skill-name/
 │       └── SKILL.md       # Required skill file
 ├── CONTRIBUTING.md
+├── DOCS-SYNC.md           # How to keep skills in sync with the Kamal docs
 ├── LICENSE
 ├── README.md
 ├── VERSIONS.md
+├── kamal-docs.json        # Doc pages each skill depends on + docs commit it was verified against
 └── validate-skills.sh
 ```
 
@@ -164,6 +166,28 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) specific
 - [ ] `SKILL.md` is under 500 lines
 - [ ] Every Kamal fact is grounded in the official docs (no invented commands, flags, keys, defaults, or behaviors)
 - [ ] No sensitive data or credentials
+- [ ] New or changed doc pages the skill relies on are listed in its `kamal-docs.json` entry
+
+## Keeping Skills in Sync with the Kamal Docs
+
+`kamal-docs.json` records which kamal-site doc pages each skill depends on and the docs commit it was last verified against. A nightly workflow opens a `kamal-docs-drift` issue when those pages change. When asked to sync or update the skills against the Kamal docs, follow [DOCS-SYNC.md](DOCS-SYNC.md). Check drift locally with:
+
+```bash
+GITHUB_TOKEN=$(gh auth token) node .github/scripts/check-kamal-docs.js
+```
+
+After updating skills, record the new baseline with `--mark-synced`:
+
+```bash
+GITHUB_TOKEN=$(gh auth token) node .github/scripts/check-kamal-docs.js --mark-synced --skills deploy,proxy
+```
+
+- Only mark skills you verified against the current docs. Pass `--skills`; omit it only when every skill was checked.
+- Run it after the skill edits and version bumps, and after the user has reviewed the proposed changes.
+- It rewrites `kamal-docs.json` and the Kamal Docs column in `VERSIONS.md`. Commit both. Never edit the `verified` entries by hand.
+- A skill whose pages changed but needed no edit still gets marked, so the report stays clean.
+
+When you add a skill, add an entry for it in `kamal-docs.json` listing every doc page it relies on, then run the script with `--mark-synced --skills <name>`.
 
 ## Checking for Updates
 

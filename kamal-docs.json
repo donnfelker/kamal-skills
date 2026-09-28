@@ -1,0 +1,340 @@
+{
+  "$comment": "Tracks which Kamal doc pages each skill depends on and the kamal-site commit each skill was last verified against. Update with: node .github/scripts/check-kamal-docs.js --mark-synced",
+  "source": {
+    "repo": "basecamp/kamal-site",
+    "branch": "main",
+    "site": "https://kamal-deploy.org",
+    "release_repo": "basecamp/kamal"
+  },
+  "ignore": [
+    "docs/index.md",
+    "docs/search/index.md",
+    "docs/commands/index.md",
+    "docs/hooks/index.md",
+    "docs/upgrading/index.md"
+  ],
+  "skills": {
+    "accessories": {
+      "docs": [
+        "docs/configuration/accessories.md",
+        "docs/commands/accessory.md",
+        "docs/configuration/docker-registry.md",
+        "docs/configuration/environment-variables.md",
+        "docs/configuration/proxy.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "aliases": {
+      "docs": [
+        "docs/configuration/aliases.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "app": {
+      "docs": [
+        "docs/commands/app.md",
+        "docs/commands/config.md",
+        "docs/commands/details.md",
+        "docs/commands/audit.md",
+        "docs/commands/version.md",
+        "docs/commands/running-commands-on-servers.md",
+        "docs/configuration/aliases.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "build": {
+      "docs": [
+        "docs/commands/build.md",
+        "docs/configuration/builders.md",
+        "docs/configuration/builder-examples.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "config": {
+      "docs": [
+        "docs/configuration/index.md",
+        "docs/configuration/overview.md",
+        "docs/configuration/anchors.md",
+        "docs/configuration/accessories.md",
+        "docs/configuration/aliases.md",
+        "docs/configuration/booting.md",
+        "docs/configuration/builders.md",
+        "docs/configuration/cron.md",
+        "docs/configuration/docker-registry.md",
+        "docs/configuration/environment-variables.md",
+        "docs/configuration/logging.md",
+        "docs/configuration/output.md",
+        "docs/configuration/proxy.md",
+        "docs/configuration/roles.md",
+        "docs/configuration/servers.md",
+        "docs/configuration/ssh.md",
+        "docs/configuration/sshkit.md",
+        "docs/commands/config.md",
+        "docs/commands/init.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "cron": {
+      "docs": [
+        "docs/configuration/cron.md",
+        "docs/configuration/roles.md",
+        "docs/configuration/servers.md",
+        "docs/configuration/environment-variables.md",
+        "docs/commands/details.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "deploy": {
+      "docs": [
+        "docs/commands/deploy.md",
+        "docs/commands/redeploy.md",
+        "docs/commands/lock.md",
+        "docs/commands/setup.md",
+        "docs/configuration/overview.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "env": {
+      "docs": [
+        "docs/configuration/environment-variables.md",
+        "docs/commands/secrets.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "hooks": {
+      "docs": [
+        "docs/hooks/overview.md",
+        "docs/hooks/docker-setup.md",
+        "docs/hooks/pre-connect.md",
+        "docs/hooks/pre-build.md",
+        "docs/hooks/pre-deploy.md",
+        "docs/hooks/pre-app-boot.md",
+        "docs/hooks/post-app-boot.md",
+        "docs/hooks/post-deploy.md",
+        "docs/hooks/pre-proxy-reboot.md",
+        "docs/hooks/post-proxy-reboot.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "logging": {
+      "docs": [
+        "docs/configuration/logging.md",
+        "docs/configuration/output.md",
+        "docs/commands/app.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "proxy": {
+      "docs": [
+        "docs/configuration/proxy.md",
+        "docs/commands/proxy.md",
+        "docs/hooks/pre-proxy-reboot.md",
+        "docs/hooks/post-proxy-reboot.md",
+        "docs/upgrading/proxy-changes.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "prune": {
+      "docs": [
+        "docs/commands/prune.md",
+        "docs/commands/deploy.md",
+        "docs/configuration/overview.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "registry": {
+      "docs": [
+        "docs/configuration/docker-registry.md",
+        "docs/commands/registry.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "remove": {
+      "docs": [
+        "docs/commands/remove.md",
+        "docs/commands/app.md",
+        "docs/commands/accessory.md",
+        "docs/commands/proxy.md",
+        "docs/commands/registry.md",
+        "docs/commands/view-all-commands.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "rollback": {
+      "docs": [
+        "docs/commands/rollback.md",
+        "docs/commands/app.md",
+        "docs/commands/details.md",
+        "docs/commands/version.md",
+        "docs/configuration/overview.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "rollout": {
+      "docs": [
+        "docs/configuration/booting.md",
+        "docs/configuration/roles.md",
+        "docs/configuration/servers.md",
+        "docs/commands/deploy.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "secrets": {
+      "docs": [
+        "docs/commands/secrets.md",
+        "docs/configuration/environment-variables.md",
+        "docs/configuration/docker-registry.md",
+        "docs/upgrading/secrets-changes.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "server-hardening": {
+      "docs": [
+        "docs/configuration/ssh.md",
+        "docs/configuration/proxy.md",
+        "docs/commands/server.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "servers": {
+      "docs": [
+        "docs/configuration/servers.md",
+        "docs/configuration/roles.md",
+        "docs/configuration/overview.md",
+        "docs/configuration/proxy.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "setup": {
+      "docs": [
+        "docs/installation/index.md",
+        "docs/installation/dockerized.md",
+        "docs/commands/init.md",
+        "docs/commands/setup.md",
+        "docs/commands/server.md",
+        "docs/commands/secrets.md",
+        "docs/commands/help.md",
+        "docs/commands/docs.md",
+        "docs/commands/version.md",
+        "docs/commands/view-all-commands.md",
+        "docs/configuration/overview.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "ssh": {
+      "docs": [
+        "docs/configuration/ssh.md",
+        "docs/configuration/sshkit.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    },
+    "upgrade": {
+      "docs": [
+        "docs/upgrading/overview.md",
+        "docs/upgrading/configuration-changes.md",
+        "docs/upgrading/network-changes.md",
+        "docs/upgrading/proxy-changes.md",
+        "docs/upgrading/secrets-changes.md",
+        "docs/upgrading/continuing-to-use-traefik.md",
+        "docs/commands/upgrade.md",
+        "docs/configuration/builders.md",
+        "docs/configuration/environment-variables.md",
+        "docs/configuration/proxy.md",
+        "docs/configuration/roles.md",
+        "docs/hooks/docker-setup.md",
+        "docs/hooks/pre-deploy.md",
+        "docs/hooks/pre-proxy-reboot.md",
+        "docs/hooks/post-proxy-reboot.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-06-30"
+      }
+    }
+  }
+}

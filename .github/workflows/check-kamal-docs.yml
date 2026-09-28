@@ -1,0 +1,62 @@
+name: Check Kamal Docs
+
+# Nightly check of the skills against the official Kamal docs (basecamp/kamal-site).
+# Opens or updates a "kamal-docs-drift" issue when docs the skills depend on change,
+# and closes it once every skill is marked synced again.
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # Nightly 06:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: check-kamal-docs
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check docs
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          node .github/scripts/check-kamal-docs.js --output report.md
+          code=$?
+          set -e
+          if [ "$code" = "1" ]; then exit 1; fi
+          echo "drift=$([ "$code" = "2" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open or update drift issue
+        if: steps.check.outputs.drift == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create kamal-docs-drift --color D93F0B \
+            --description "Kamal docs changed since the skills were verified" --force
+          issue=$(gh issue list --label kamal-docs-drift --state open --json number --jq '.[0].number // empty')
+          if [ -n "$issue" ]; then
+            gh issue edit "$issue" --body-file report.md
+          else
+            gh issue create --title "Kamal docs changed: review affected skills" \
+              --label kamal-docs-drift --body-file report.md
+          fi
+
+      - name: Close drift issue when in sync
+        if: steps.check.outputs.drift == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for issue in $(gh issue list --label kamal-docs-drift --state open --json number --jq '.[].number'); do
+            gh issue close "$issue" --comment "All skills are in sync with the current Kamal docs."
+          done
