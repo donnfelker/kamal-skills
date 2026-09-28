@@ -82,6 +82,7 @@ skills/your-skill-name/
 3. Make your changes
 4. Test locally with an AI agent
 5. Run `./validate-skills.sh` to check frontmatter and structure
+   - New skill? Add it to `kamal-docs.json` with the doc pages it relies on (see [DOCS-SYNC.md](DOCS-SYNC.md))
 6. Submit a pull request
 
 ## Skill Quality Checklist
