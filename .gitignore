@@ -25,3 +25,8 @@ skills-lock.json
 *~
 .idea/
 .vscode/
+
+# Kamal docs sync workflow scratch files
+.kamal-site/
+.kamal-docs-report.md
+.kamal-docs-pr.md

@@ -1,8 +1,9 @@
 name: Check Kamal Docs
 
 # Nightly check of the skills against the official Kamal docs (basecamp/kamal-site).
-# Opens or updates a "kamal-docs-drift" issue when docs the skills depend on change,
-# and closes it once every skill is marked synced again.
+# On drift: opens or updates a "kamal-docs-drift" issue, then runs Claude Code to update
+# the affected skills and opens a PR for review. Claude is skipped while an update PR is
+# already open. Closes the issue once every skill is marked synced again.
 
 on:
   schedule:
@@ -11,14 +12,20 @@ on:
 
 concurrency:
   group: check-kamal-docs
-  cancel-in-progress: true
+  cancel-in-progress: false
+
+env:
+  UPDATE_BRANCH: auto/kamal-docs-sync
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     permissions:
-      contents: read
+      contents: write
       issues: write
+      pull-requests: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -30,14 +37,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +e
-          node .github/scripts/check-kamal-docs.js --output report.md
+          node .github/scripts/check-kamal-docs.js --output .kamal-docs-report.md
           code=$?
           set -e
           if [ "$code" = "1" ]; then exit 1; fi
           echo "drift=$([ "$code" = "2" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
-          cat report.md >> "$GITHUB_STEP_SUMMARY"
+          cat .kamal-docs-report.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Open or update drift issue
+        id: issue
         if: steps.check.outputs.drift == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,11 +54,93 @@ jobs:
             --description "Kamal docs changed since the skills were verified" --force
           issue=$(gh issue list --label kamal-docs-drift --state open --json number --jq '.[0].number // empty')
           if [ -n "$issue" ]; then
-            gh issue edit "$issue" --body-file report.md
+            gh issue edit "$issue" --body-file .kamal-docs-report.md
           else
-            gh issue create --title "Kamal docs changed: review affected skills" \
-              --label kamal-docs-drift --body-file report.md
+            url=$(gh issue create --title "Kamal docs changed: review affected skills" \
+              --label kamal-docs-drift --body-file .kamal-docs-report.md)
+            issue=${url##*/}
           fi
+          echo "number=$issue" >> "$GITHUB_OUTPUT"
+
+          pr=$(gh pr list --head "$UPDATE_BRANCH" --state open --json number --jq '.[0].number // empty')
+          echo "pr_open=$([ -n "$pr" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          if [ -n "$pr" ]; then
+            echo "Update PR #$pr is already open. Skipping Claude until it is merged or closed." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Checkout Kamal docs source
+        if: steps.check.outputs.drift == 'true' && steps.issue.outputs.pr_open == 'false'
+        uses: actions/checkout@v6
+        with:
+          repository: basecamp/kamal-site
+          path: .kamal-site
+          fetch-depth: 0
+
+      - name: Update skills with Claude
+        if: steps.check.outputs.drift == 'true' && steps.issue.outputs.pr_open == 'false'
+        uses: anthropics/claude-code-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            The official Kamal docs changed since some skills in this repo were last verified.
+            Update the affected skills by following DOCS-SYNC.md and the Grounding rules in AGENTS.md.
+
+            Inputs:
+            - `.kamal-docs-report.md`: the drift report (affected skills, changed pages, diffs).
+            - `.kamal-site/`: a full git clone of basecamp/kamal-site, the source of kamal-deploy.org.
+              Each skill's baseline commit is in `kamal-docs.json` under `verified.sha`. See exactly
+              what changed with `git -C .kamal-site diff <sha> HEAD -- docs/<page>.md`, and read full
+              pages under `.kamal-site/docs/`.
+
+            Steps:
+            1. For each skill under "Skills to review", read its changed pages and diffs, then update
+               SKILL.md, references/, and evals/ so every Kamal fact matches the current docs.
+               Every fact you add must come from `.kamal-site/docs`. Never add anything from memory.
+               If a change is ambiguous, leave the skill as is and explain it in the PR notes.
+            2. Handle "Doc pages no skill tracks", "Tracked pages that no longer exist", and
+               "Manifest gaps" as DOCS-SYNC.md describes, by editing `kamal-docs.json` and the skills.
+            3. Bump `metadata.version` in each edited SKILL.md and its row in VERSIONS.md (version and
+               Last Updated), using the bump rules in DOCS-SYNC.md, and add a Recent Changes entry.
+            4. Run `node .github/scripts/check-kamal-docs.js --mark-synced --skills <skills you verified>`.
+               Include skills whose pages changed but needed no edit.
+            5. Run `./validate-skills.sh` and `node .github/scripts/check-kamal-docs.js`, and fix problems.
+            6. Write the PR description to `.kamal-docs-pr.md`: a summary, then per skill what changed and
+               which doc page supports it, the version bumps, and anything left for a human to decide.
+               Follow the writing rules in AGENTS.md. No em dashes.
+
+            Do not commit, push, or open a PR. The workflow does that after you finish.
+            Do not edit files under `.kamal-site/`, `.github/`, or anything outside this task.
+          claude_args: |
+            --max-turns 150
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(git -C .kamal-site:*),Bash(git diff:*),Bash(git status:*),Bash(node .github/scripts/check-kamal-docs.js:*),Bash(./validate-skills.sh)"
+
+      - name: Open update PR
+        if: steps.check.outputs.drift == 'true' && steps.issue.outputs.pr_open == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ steps.issue.outputs.number }}
+        run: |
+          git add skills kamal-docs.json VERSIONS.md
+          if git diff --cached --quiet; then
+            echo "Claude made no changes. The drift issue stays open for a manual update." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          ./validate-skills.sh
+
+          version=$(node -e 'const m=require("./kamal-docs.json");console.log([...new Set(Object.values(m.skills).map(s=>s.verified.kamal))].join(", "))')
+          [ -f .kamal-docs-pr.md ] || echo "Automated skill update from the Kamal docs drift report." > .kamal-docs-pr.md
+          printf '\n\nCloses #%s\n\nReview every change against the linked docs before merging.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n' "$ISSUE" >> .kamal-docs-pr.md
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$UPDATE_BRANCH"
+          git commit -m "fix: sync skills with Kamal $version docs"
+          git push --force origin "$UPDATE_BRANCH"
+          gh pr create --base main --head "$UPDATE_BRANCH" \
+            --title "fix: sync skills with Kamal $version docs" --body-file .kamal-docs-pr.md
 
       - name: Close drift issue when in sync
         if: steps.check.outputs.drift == 'false'

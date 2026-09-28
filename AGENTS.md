@@ -170,7 +170,7 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) specific
 
 ## Keeping Skills in Sync with the Kamal Docs
 
-`kamal-docs.json` records which kamal-site doc pages each skill depends on and the docs commit it was last verified against. A nightly workflow opens a `kamal-docs-drift` issue when those pages change. When asked to sync or update the skills against the Kamal docs, follow [DOCS-SYNC.md](DOCS-SYNC.md). Check drift locally with:
+`kamal-docs.json` records which kamal-site doc pages each skill depends on and the docs commit it was last verified against. A nightly workflow opens a `kamal-docs-drift` issue when those pages change, then runs Claude Code to update the affected skills and open a PR for review. When asked to sync or update the skills against the Kamal docs, follow [DOCS-SYNC.md](DOCS-SYNC.md). Check drift locally with:
 
 ```bash
 GITHUB_TOKEN=$(gh auth token) node .github/scripts/check-kamal-docs.js

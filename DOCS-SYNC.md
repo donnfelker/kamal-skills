@@ -8,7 +8,7 @@ Every skill is grounded in the official Kamal docs at [kamal-deploy.org](https:/
 |-------|--------------|
 | `kamal-docs.json` | Maps each skill to the doc pages it depends on (`docs`), and records the kamal-site commit and Kamal version it was last verified against (`verified`). Pages listed in `ignore` are index pages no skill needs. |
 | `.github/scripts/check-kamal-docs.js` | Compares each skill's verified commit to the current docs and reports changed pages per skill, new or removed pages, links a skill cites but does not track, and new Kamal versions. |
-| `.github/workflows/check-kamal-docs.yml` | Runs the check nightly (and on demand). Opens or updates an issue labeled `kamal-docs-drift` with the report, and closes it once everything is synced. |
+| `.github/workflows/check-kamal-docs.yml` | Runs the check nightly (and on demand). On drift, opens or updates an issue labeled `kamal-docs-drift`, then runs Claude Code to update the affected skills and opens a PR on the `auto/kamal-docs-sync` branch. Closes the issue once everything is synced. |
 | `VERSIONS.md` | The **Kamal Docs** column shows which Kamal version and docs commit each skill was verified against. `--mark-synced` rewrites it. |
 
 The Kamal version comes from the site's own `_data/github.yml`, so it reflects what the docs describe, which can lag a gem release by a few days. The report notes when that happens.
@@ -26,6 +26,15 @@ GITHUB_TOKEN=$(gh auth token) node .github/scripts/check-kamal-docs.js
 ```
 
 Exit code `0` means in sync, `2` means drift, `1` means an error. The token is optional but avoids GitHub API rate limits. Add `--output report.md` to save the report.
+
+## Automatic updates
+
+When the nightly check finds drift, Claude Code (via `anthropics/claude-code-action`, using the `CLAUDE_CODE_OAUTH_TOKEN` secret) runs the update steps below against a full clone of kamal-site. The workflow then commits the changes and opens a PR titled `fix: sync skills with Kamal <version> docs` that closes the drift issue.
+
+- **Review before merging.** Check each change against the doc page cited in the PR description. Nothing merges on its own.
+- **One PR at a time.** While the update PR is open, later runs refresh the drift issue but skip Claude. To make Claude retry, close the PR and run the workflow again (Actions > Check Kamal Docs > Run workflow).
+- **No changes made?** The drift issue stays open. Update the skills by hand with the steps below.
+- **Validation:** PRs opened by `GITHUB_TOKEN` do not trigger other workflows, so the job runs `./validate-skills.sh` itself before opening the PR.
 
 ## Update the affected skills
 
