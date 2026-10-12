@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout the commit CI tested
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
 
@@ -55,7 +55,7 @@ jobs:
       # - run: gem install kamal -v <version the user runs locally>
 
       - name: Set up Docker Buildx for cache
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       # Exposes the Actions cache to Docker, for builder.cache type gha.
       - name: Expose the GitHub Actions runtime
@@ -92,7 +92,7 @@ jobs:
 |---|---|
 | `workflow_run` + `conclusion == 'success'` | Deploys only after the tests pass. A failing CI run still triggers this workflow, so the `if:` is what blocks the deploy. |
 | `event == 'push'` | Pull-request runs of the test workflow also complete; only a push to the branch deploys. |
-| `ref: head_sha` | Deploys the tested commit even if `main` has moved since. |
+| `ref: head_sha` | Deploys the tested commit even if `main` has moved since. `actions/checkout` v7 refuses to check out a fork's pull-request head in a `workflow_run` job; a push to your own branch is unaffected. |
 | `cancel-in-progress: false` | Killing a deploy mid-boot can leave the deploy lock held. Waiting is safer. |
 | `umask 077` | The written files are readable only by the runner user. |
 | `printf '%s'` | No trailing newline added to keys; `echo` adds one. |
