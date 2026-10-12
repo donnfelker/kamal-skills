@@ -69,6 +69,7 @@ Because they follow the cross-agent [Agent Skills spec](https://agentskills.io),
 | [deploy](skills/deploy/) | Run Kamal deploys end to end — a full `kamal deploy` (build, push, pull, boot, health-check on GET /up, zero-downtime... |
 | [env](skills/env/) | Configure environment variables in your Kamal deploy.yml — the `env` block with `clear` values, `secret` references... |
 | [hooks](skills/hooks/) | Write and wire up Kamal deploy hooks — scripts in `.kamal/hooks` (docker-setup, pre-connect, pre-build, pre-deploy,... |
+| [kamal](skills/kamal/) | Start here for anything Kamal when the request is broad or it is unclear which Kamal skill fits. Reads the project's... |
 | [local-ci-deploy](skills/local-ci-deploy/) | Opt-in local CI for Kamal deploys. Ties deploys to a gh-signoff commit status, for teams that run tests on their own... |
 | [logging](skills/logging/) | Configure how logs flow in a Kamal deployment — the Docker logging driver and options for your app containers (the... |
 | [proxy](skills/proxy/) | Configure and operate kamal-proxy, the reverse proxy that gives Kamal zero-downtime deploys on ports 80 and 443. Use... |
@@ -163,6 +164,7 @@ You can also invoke skills directly:
 ## Skill Categories
 
 ### Getting Started
+- `kamal` - Start here: routes broad Kamal requests to the right skill
 - `setup` - Install Kamal and ship your first deploy
 - `config` - Write and structure config/deploy.yml
 

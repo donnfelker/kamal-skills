@@ -1,0 +1,41 @@
+{
+  "skill_name": "kamal",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "My Kamal deploy is broken, can you help?",
+      "expected_output": "Should not guess a fix. Should read config/deploy.yml and .kamal/ first, ask for the failing command and its output, then route by where it failed (build/registry, ssh, secrets/env, proxy, app, hooks, deploy lock) to the matching skill. Should not state Kamal commands or flags from memory in place of handing off.",
+      "assertions": [
+        "Reads the project's Kamal files before asking questions",
+        "Asks for the failing command and its output",
+        "Routes to a specific skill based on where the failure shows up",
+        "Does not invent Kamal commands, flags, or config keys"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I've never used Kamal. Set it up for this app with a Postgres database and my domain with HTTPS.",
+      "expected_output": "Should notice there is no config/deploy.yml and start with the setup skill, then chain accessories (Postgres), env/secrets for connection settings, proxy for the domain and HTTPS, and deploy, one skill at a time in order.",
+      "assertions": [
+        "Detects Kamal is not set up yet",
+        "Starts with the setup skill",
+        "Chains accessories, secrets or env, proxy, and deploy in a sensible order",
+        "Finishes one skill before starting the next"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "What can you do with Kamal?",
+      "expected_output": "Should give a short map: Kamal deploys Docker containers to your own servers over SSH with zero-downtime cutover through kamal-proxy, list the relevant skills from the routing table, and offer a next step. Should not push the opt-in local-ci-deploy skill unless asked about signoff or local CI.",
+      "assertions": [
+        "Gives a short summary of what Kamal does",
+        "Lists relevant skills from the pack",
+        "Offers a concrete next step",
+        "Does not suggest local-ci-deploy unprompted"
+      ],
+      "files": []
+    }
+  ]
+}
