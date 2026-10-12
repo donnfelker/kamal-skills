@@ -26,8 +26,13 @@ Current versions of all skills. Agents can compare against local versions to che
 | remove | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | upgrade | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | server-hardening | 1.0.0 | 2026-07-06 | 2.12.0 (`c700a5b`) |
+| ci-deploy | 1.0.0 | 2026-10-11 | 2.12.0 (`c700a5b`) |
 
 ## Recent Changes
+
+### ci-deploy 1.0.0 (2026-10-11)
+
+- Added the `ci-deploy` skill — sets up `kamal deploy` from GitHub Actions after the tests pass on `main`, for any stack (Rails, Next.js, Phoenix, Rust, static sites): a dedicated deploy key with host-key checks, secrets in a GitHub environment, a workflow template, the GHA build cache, and verifying the first run.
 
 ### server-hardening 1.0.0 (2026-07-06)
 
