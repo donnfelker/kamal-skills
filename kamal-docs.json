@@ -335,6 +335,25 @@
         "kamal": "2.12.0",
         "date": "2026-06-30"
       }
+    },
+    "ci-deploy": {
+      "docs": [
+        "docs/commands/deploy.md",
+        "docs/commands/lock.md",
+        "docs/configuration/builder-examples.md",
+        "docs/configuration/builders.md",
+        "docs/configuration/docker-registry.md",
+        "docs/configuration/environment-variables.md",
+        "docs/configuration/proxy.md",
+        "docs/configuration/ssh.md",
+        "docs/installation/index.md",
+        "docs/installation/dockerized.md"
+      ],
+      "verified": {
+        "sha": "c700a5b49ca296cf48e865bae881ec7becf6ecdc",
+        "kamal": "2.12.0",
+        "date": "2026-10-12"
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 # Kamal Skills for AI Agents
 
-A collection of AI agent skills for deploying and operating applications with [Kamal](https://kamal-deploy.org). Built for developers and operators who want AI coding agents to help them ship apps to their own servers — covering install and getting started, configuration, deploys, image builds, rollbacks, servers and roles, environment variables, secrets, the registry, the proxy, accessories, SSH, server hardening, cron, logging, app operations, hooks, pruning, aliases, removal, and upgrading from 1.x to 2.0.
+A collection of AI agent skills for deploying and operating applications with [Kamal](https://kamal-deploy.org). Built for developers and operators who want AI coding agents to help them ship apps to their own servers — covering install and getting started, configuration, deploys, continuous deployment from GitHub Actions, image builds, rollbacks, servers and roles, environment variables, secrets, the registry, the proxy, accessories, SSH, server hardening, cron, logging, app operations, hooks, pruning, aliases, removal, and upgrading from 1.x to 2.0.
 
 Every skill is **grounded in the official Kamal documentation** at [kamal-deploy.org](https://kamal-deploy.org) — no invented commands, flags, config keys, defaults, or behaviors.
 
@@ -63,6 +63,7 @@ Because they follow the cross-agent [Agent Skills spec](https://agentskills.io),
 | [aliases](skills/aliases/) | Define custom command aliases under the top-level `aliases` key in `config/deploy.yml` so a long, repeated `kamal`... |
 | [app](skills/app/) | Operate and inspect already-running Kamal apps without redeploying. Manage app containers with `kamal app` (boot,... |
 | [build](skills/build/) | Configure Kamal builders and build then push your app image. Use this skill when the user wants to set up the `builder`... |
+| [ci-deploy](skills/ci-deploy/) | Set up continuous deployment so every push to main runs `kamal deploy` from GitHub Actions once the tests pass — for... |
 | [config](skills/config/) | Understand and write your Kamal configuration in config/deploy.yml. Use when the user says "set up config/deploy.yml,"... |
 | [cron](skills/cron/) | Run recurring, scheduled, or cron jobs on a Kamal deployment. Use when the user says "run a cron job," "schedule a... |
 | [deploy](skills/deploy/) | Run Kamal deploys end to end — a full `kamal deploy` (build, push, pull, boot, health-check on GET /up, zero-downtime... |
