@@ -1,0 +1,35 @@
+{
+  "skill_name": "local-ci-deploy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We stopped using GitHub Actions for tests. We run tests locally and mark the commit with gh signoff. How do I make kamal deploy refuse a commit nobody signed off on?",
+      "expected_output": "Should add a .kamal/hooks/pre-deploy hook (no extension, executable) that resolves KAMAL_VERSION to a commit, reads the commit's GitHub status with gh api, and exits non-zero unless the signoff context (or the team's partial contexts) is success. Should fail closed when gh is missing or GitHub can't be reached. Should let kamal rollback through (KAMAL_COMMAND=rollback) or explain the choice. Should mention --skip-hooks bypasses the gate and that merge or squash commits need their own signoff. Should label gh-signoff and commit statuses as external conventions, not Kamal features.",
+      "assertions": [
+        "Uses a pre-deploy hook in .kamal/hooks with no file extension",
+        "Uses KAMAL_VERSION to identify the commit being deployed",
+        "Checks the signoff commit status through the GitHub API or gh CLI",
+        "Exits non-zero when the signoff is not green or cannot be read",
+        "Addresses rollbacks (KAMAL_COMMAND=rollback)",
+        "Labels gh-signoff and commit statuses as external conventions, not Kamal features",
+        "Does not invent a built-in Kamal CI or signoff check"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I already deploy from GitHub Actions with Kamal after my CI workflow passes. I want to drop the CI workflow and deploy whenever I run gh signoff on main instead.",
+      "expected_output": "Should keep the existing ci-deploy setup (deploy key, production environment, secrets) and swap the workflow_run trigger for on: status. Should add a gate job that deploys only when the signed-off SHA is the current tip of main and every required context is success, and put concurrency on the deploy job rather than the workflow. Should check out github.event.sha. Should warn that merge, squash, and rebase merges create unsigned commits on main, and that gh signoff on main now deploys production. Should confirm before changing the workflow.",
+      "assertions": [
+        "Triggers the workflow on the GitHub status event",
+        "Gates on the signed-off commit being the tip of main",
+        "Requires the signoff context(s) to be success before deploying",
+        "Places concurrency on the deploy job, not the whole workflow",
+        "Checks out the signed-off SHA",
+        "Warns that merges create new unsigned commits",
+        "Labels the status event and gh-signoff as GitHub conventions, not Kamal features"
+      ],
+      "files": []
+    }
+  ]
+}

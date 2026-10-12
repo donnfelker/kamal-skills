@@ -2,7 +2,7 @@
 name: ci-deploy
 description: Set up continuous deployment so every push to main runs `kamal deploy` from GitHub Actions once the tests pass — for any stack Kamal ships (Rails, Next.js, Phoenix, Rust, static sites, and more). Use when the user says "auto-deploy on push," "deploy from GitHub Actions," "continuous deployment with Kamal," "deploy when CI passes," "set up CD," or "stop deploying from my laptop." Covers the deploy ssh key, secrets in a GitHub environment, the workflow, the GHA build cache, and verifying the first run. For running a deploy by hand, see deploy. For the secrets file itself, see secrets. For build cache options, see build.
 metadata:
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # CI Deploy
@@ -120,7 +120,7 @@ Use the template in [references/workflow-template.md](references/workflow-templa
 9. **Write the input files** `.kamal/secrets` reads, with `umask 077`. Keep them git-ignored, so the checkout stays clean.
 10. **Run `kamal deploy`** (`bin/kamal deploy` in a Rails app).
 
-If the repo has no test workflow, trigger on `push` to `main` instead and say plainly that nothing gates the deploy.
+If the repo has no test workflow, trigger on `push` to `main` instead and say plainly that nothing gates the deploy. If the team runs tests locally and signs off with gh-signoff, the opt-in **local-ci-deploy** skill can trigger the deploy on a green signoff instead.
 
 ## Step 5: Add the Build Cache
 
@@ -201,3 +201,4 @@ Add a short "Continuous deployment" section to the app's deploy docs (and its `A
 - **ssh**: the ssh user, port, and proxy settings Kamal connects with.
 - **hooks**: hooks run on the runner too.
 - **server-hardening**: before opening ssh to GitHub's runners.
+- **local-ci-deploy**: opt-in. Deploy on a green gh-signoff status instead of a test workflow, or refuse unsigned commits in a `pre-deploy` hook.

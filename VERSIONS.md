@@ -20,15 +20,21 @@ Current versions of all skills. Agents can compare against local versions to che
 | rollout | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | logging | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | app | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
-| hooks | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
+| hooks | 1.0.1 | 2026-10-12 | 2.12.0 (`c700a5b`) |
 | prune | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | aliases | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | remove | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | upgrade | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | server-hardening | 1.0.0 | 2026-07-06 | 2.12.0 (`c700a5b`) |
-| ci-deploy | 1.0.0 | 2026-10-11 | 2.12.0 (`c700a5b`) |
+| ci-deploy | 1.0.1 | 2026-10-12 | 2.12.0 (`c700a5b`) |
+| local-ci-deploy | 1.0.0 | 2026-10-12 | 2.12.0 (`c700a5b`) |
 
 ## Recent Changes
+
+### local-ci-deploy 1.0.0, hooks 1.0.1, ci-deploy 1.0.1 (2026-10-12)
+
+- Added the opt-in `local-ci-deploy` skill for teams that run tests locally and mark passing commits with [gh-signoff](https://github.com/basecamp/gh-signoff). A `pre-deploy` hook refuses to deploy a commit without a green signoff (fails closed, lets `kamal rollback` through, optional per-destination opt-out), and `references/deploy-on-signoff.md` has a GitHub Actions workflow that deploys when a signoff turns green on the tip of `main`. gh-signoff and GitHub statuses are labeled external conventions.
+- `hooks` and `ci-deploy`: a related-skills pointer to `local-ci-deploy`. Their behavior is unchanged.
 
 ### ci-deploy 1.0.0 (2026-10-11)
 
