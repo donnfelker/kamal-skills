@@ -2,7 +2,7 @@
 name: hooks
 description: Write and wire up Kamal deploy hooks — scripts in `.kamal/hooks` (docker-setup, pre-connect, pre-build, pre-deploy, post-deploy, pre-app-boot, post-app-boot, pre-proxy-reboot, post-proxy-reboot) that run at fixed points in a deploy, plus the `KAMAL_*` env vars (`KAMAL_VERSION`, `KAMAL_PERFORMER`, `KAMAL_HOSTS`, `KAMAL_RECORDED_AT`) passed to them for audit reporting, deploy notifications, CI gates, and load-balancer draining. Use when the user says "add a deploy hook," "run a script before/after deploy," "post-deploy notification," "fail the deploy if CI hasn't passed," "block deploys unless I'm on the VPN," "run a script when kamal-proxy reboots," "where do hooks live," "hooks_path," "hooks_output," "skip hooks," or "what are the KAMAL_ env vars." Covers the `.kamal/hooks` folder from `kamal init`, naming rules, non-zero exit aborting the command, `hooks_path`/`hooks_output`, and `--skip-hooks`. For the deploy sequence these fire within, see deploy. For builds, see build.
 metadata:
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Deploy Hooks
@@ -197,3 +197,4 @@ Use it when you need to bypass a gate for a one-off deploy. For how `--skip-hook
 
 - **deploy**: For the full `kamal deploy` / `kamal redeploy` sequence these hooks fire within, and the other flags that pair with `--skip-hooks`.
 - **build**: For the `kamal build` step where the `pre-connect` and `pre-build` hooks run.
+- **local-ci-deploy**: Opt-in. A ready-made `pre-deploy` hook that refuses commits without a green gh-signoff status, for teams that run tests locally.
