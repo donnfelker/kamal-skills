@@ -4,6 +4,7 @@ Current versions of all skills. Agents can compare against local versions to che
 
 | Skill | Version | Last Updated | Kamal Docs |
 |-------|---------|--------------|------------|
+| kamal | 1.0.0 | 2026-10-12 | 2.12.0 (`c700a5b`) |
 | setup | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | config | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | deploy | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
@@ -30,6 +31,10 @@ Current versions of all skills. Agents can compare against local versions to che
 | local-ci-deploy | 1.0.0 | 2026-10-12 | 2.12.0 (`c700a5b`) |
 
 ## Recent Changes
+
+### kamal 1.0.0 (2026-10-12)
+
+- Added the `kamal` entry-point skill. For broad or unclear Kamal requests, it reads the project's Kamal files, routes to the skill that covers the request, chains skills for multi-step jobs (first deploy, adding a database, a 1.x upgrade), and routes broad troubleshooting by where the failure shows up. It holds no commands or config keys of its own.
 
 ### local-ci-deploy 1.0.0, hooks 1.0.1, ci-deploy 1.0.1 (2026-10-12)
 
