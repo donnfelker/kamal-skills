@@ -1,8 +1,8 @@
 ---
 name: ci-deploy
-description: Set up continuous deployment so every push to main runs `kamal deploy` from GitHub Actions once the tests pass — for any stack Kamal ships (Rails, Next.js, Phoenix, Rust, static sites, and more). Use when the user says "auto-deploy on push," "deploy from GitHub Actions," "continuous deployment with Kamal," "deploy when CI passes," "set up CD," or "stop deploying from my laptop." Covers the deploy ssh key, secrets in a GitHub environment, the workflow, the GHA build cache, and verifying the first run. For running a deploy by hand, see deploy. For the secrets file itself, see secrets. For build cache options, see build.
+description: Set up continuous deployment so every push to main runs `kamal deploy` from GitHub Actions once the tests pass — for any stack Kamal ships (Rails, Next.js, Phoenix, Rust, static sites, and more). Use when the user says "auto-deploy on push," "deploy from GitHub Actions," "continuous deployment with Kamal," "deploy when CI passes," "set up CD," "stop deploying from my laptop," or "use 1Password in GitHub Actions." Covers the deploy ssh key, secrets in a GitHub environment or read from 1Password with a service account, the workflow, the GHA build cache, and verifying the first run. For running a deploy by hand, see deploy. For the secrets file itself, see secrets. For build cache options, see build.
 metadata:
-  version: 1.0.1
+  version: 1.1.0
 ---
 
 # CI Deploy
@@ -11,7 +11,7 @@ You are an expert in deploying Kamal apps from GitHub Actions. Your goal is a wo
 
 The pattern is the same for every stack: the runner does what the user's laptop does today. It checks out the code, gets the same inputs `.kamal/secrets` reads, loads an ssh key the server trusts, and runs `kamal deploy`. Only the inputs and the way Kamal is installed differ per stack (see [references/stacks.md](references/stacks.md)).
 
-> **Grounding note:** Kamal facts here come from the [Kamal docs](https://kamal-deploy.org). GitHub Actions features (`workflow_run`, environments, `concurrency`, repository variables) and third-party actions (`webfactory/ssh-agent`, `ruby/setup-ruby`) are **GitHub conventions, not Kamal features**. Check GitHub's docs when in doubt.
+> **Grounding note:** Kamal facts here come from the [Kamal docs](https://kamal-deploy.org). GitHub Actions features (`workflow_run`, environments, `concurrency`, repository variables) and third-party actions (`webfactory/ssh-agent`, `ruby/setup-ruby`) are **GitHub conventions, not Kamal features**. Check GitHub's docs when in doubt. 1Password service accounts and `1password/install-cli-action` are **1Password conventions**; check 1Password's docs for those.
 
 ## Ground Rules
 
@@ -55,7 +55,7 @@ Watch for:
 
 - **ERB in `deploy.yml` that reads the shell.** Values the user exports by habit before a deploy vanish in CI. An unset value often silently renders empty rather than failing. Give each one a repository variable or secret.
 - **Secrets only accessories use.** `kamal deploy` does not reboot accessories, so their secrets (backup keys, for example) are usually not needed. Add them only if the deploy fails without them.
-- **Password managers.** `kamal secrets fetch` adapters (1Password, Bitwarden, LastPass, and others) need their CLI and a login on the runner. It is usually simpler to store the values as GitHub secrets and skip the adapter in CI.
+- **Password managers.** `kamal secrets fetch` adapters need their CLI and a login on the runner. For **1Password**, keep the adapter: install `op` on the runner and give it a read-only service account token, so the vault stays the only copy of each value and `.kamal/secrets` does not change. Follow [references/1password.md](references/1password.md); its inputs collapse to one row, `OP_SERVICE_ACCOUNT_TOKEN`. For other managers, it is usually simpler to store the values as GitHub secrets and skip the adapter in CI.
 - **Registry.** With a local registry (`registry.server: localhost:5555`), Kamal starts a registry on the runner and pushes there, so no registry credentials are needed. With Docker Hub, GHCR, ECR, and similar, the registry password is one more secret.
 
 ## Step 2: Create the Deploy Key
@@ -80,6 +80,8 @@ ssh -o IdentitiesOnly=yes -i ./deploy_key <user>@<host> 'docker ps --format "{{.
 Also confirm the runner can reach ssh at all: GitHub-hosted runners come from public IPs. A host that only allows ssh over a VPN or tailnet needs a self-hosted runner or a VPN step first. Check with the **server-hardening** skill before opening a port.
 
 ## Step 3: Store the Secrets in a GitHub Environment
+
+With 1Password, the only deploy secret besides the ssh key and known hosts is `OP_SERVICE_ACCOUNT_TOKEN` ([references/1password.md](references/1password.md), Step 3). Everything else below still applies.
 
 Put the deploy secrets in a GitHub **environment** (for example `production`), not in repository secrets. Only jobs that declare `environment: production` can read them, so test jobs never see production keys. This matters when a test workflow already references a secret with the same name (a test job using `secrets.RAILS_MASTER_KEY` would otherwise get the production key).
 
@@ -118,7 +120,8 @@ Use the template in [references/workflow-template.md](references/workflow-templa
 7. **Expose the GitHub runtime** for the build cache (Step 5).
 8. **Load the ssh key** into an agent and append `KAMAL_KNOWN_HOSTS` to `~/.ssh/known_hosts`.
 9. **Write the input files** `.kamal/secrets` reads, with `umask 077`. Keep them git-ignored, so the checkout stays clean.
-10. **Run `kamal deploy`** (`bin/kamal deploy` in a Rails app).
+10. **With 1Password:** install the `op` CLI and pass `OP_SERVICE_ACCOUNT_TOKEN` to the deploy step only ([references/1password.md](references/1password.md), Step 4).
+11. **Run `kamal deploy`** (`bin/kamal deploy` in a Rails app).
 
 If the repo has no test workflow, trigger on `push` to `main` instead and say plainly that nothing gates the deploy. If the team runs tests locally and signs off with gh-signoff, the opt-in **local-ci-deploy** skill can trigger the deploy on a green signoff instead.
 
@@ -174,7 +177,7 @@ Reference timing from a Rails app: the first CI deploy, with an empty cache, too
 Add a short "Continuous deployment" section to the app's deploy docs (and its `AGENTS.md` or `CLAUDE.md` if it has one) covering:
 
 - That a push to the deploy branch **deploys production**. Agents working in the repo must know a push is a deploy.
-- The secrets and variables table, and that **changing a local secret means updating the GitHub secret too**, or the next CI deploy ships the old value.
+- The secrets and variables table, and that **changing a local secret means updating the GitHub secret too**, or the next CI deploy ships the old value. With 1Password, say instead that the vault is the source of truth and a changed value needs no GitHub update.
 - How to skip a deploy (`[skip ci]` in the commit message skips the test workflow, so the deploy never triggers).
 - How to revoke access: remove the `<app>-github-deploy` line from `authorized_keys`.
 - That `kamal deploy` from a laptop still works, for hotfixes or when Actions is down.
@@ -190,12 +193,13 @@ Add a short "Continuous deployment" section to the app's deploy docs (and its `A
 | Healthcheck fails only in CI | A secret written empty, or an ERB env value missing | Compare the secret list to Step 1's inventory; check repository variables. |
 | A hook fails in CI | Hook checks local-only state | Make the hook pass on a clean runner (files written in step 9 of the workflow). |
 | Deploy waits or fails on the lock | A previous deploy died holding the lock | `kamal lock status`, then `kamal lock release` once you're sure nothing is deploying. |
+| A 1Password fetch fails only in CI | Service account cannot see the vault, or the token is missing on the Deploy step | See the troubleshooting table in [references/1password.md](references/1password.md). |
 | Build is slow every time | Cache not configured or runtime not exposed | Step 5; look for cache entries in the repo's Actions caches page. |
 
 ## Related Skills
 
 - **deploy**: what `kamal deploy` does, and deploying by hand.
-- **secrets**: `.kamal/secrets`, substitution, and password-manager adapters.
+- **secrets**: `.kamal/secrets`, substitution, password-manager adapters, and moving file-based secrets into 1Password.
 - **build**: builder options, remote builders, and cache types.
 - **registry**: local registry versus Docker Hub, GHCR, ECR.
 - **ssh**: the ssh user, port, and proxy settings Kamal connects with.

@@ -340,6 +340,7 @@
       "docs": [
         "docs/commands/deploy.md",
         "docs/commands/lock.md",
+        "docs/commands/secrets.md",
         "docs/configuration/builder-examples.md",
         "docs/configuration/builders.md",
         "docs/configuration/docker-registry.md",
