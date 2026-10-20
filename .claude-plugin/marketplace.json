@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Kamal deployment skills for AI agents — deploy, configure, operate, and upgrade apps with Kamal, grounded in the official Kamal documentation",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "repository": "https://github.com/donnfelker/kamal-skills"
   },
   "plugins": [

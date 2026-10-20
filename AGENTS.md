@@ -167,6 +167,27 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) specific
 - [ ] Every Kamal fact is grounded in the official docs (no invented commands, flags, keys, defaults, or behaviors)
 - [ ] No sensitive data or credentials
 - [ ] New or changed doc pages the skill relies on are listed in its `kamal-docs.json` entry
+- [ ] Plugin version bumped in both `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json` (see [Versioning](#versioning))
+
+## Versioning
+
+**Every change under `skills/` must bump the plugin version.** Claude Code decides whether an installed plugin has an update by comparing the `version` in `.claude-plugin/plugin.json`. If it does not change, `/plugin` and `claude plugin update` treat the plugin as current, and users keep the old skills even after the change merges.
+
+Each change gets three bumps, in the same PR:
+
+1. **The skill:** `metadata.version` in its `SKILL.md`, plus its row and a Recent Changes entry in `VERSIONS.md`.
+2. **The plugin:** `metadata.version` in `.claude-plugin/marketplace.json`.
+3. **The plugin manifest:** `version` in `.claude-plugin/plugin.json`, set to the same value as step 2.
+
+Pick the plugin bump from the largest skill bump in the change:
+
+| Skill change | Plugin bump |
+|---|---|
+| Patch (wording, corrections) | Patch, `1.3.0` → `1.3.1` |
+| Minor (new documented commands, flags, keys, references), or a new skill | Minor, `1.3.0` → `1.4.0` |
+| Major (a Kamal change that breaks what a skill told users to do), or a removed skill | Major, `1.3.0` → `2.0.0` |
+
+Keep the two files equal. The Sync Skills workflow copies the `marketplace.json` version into `plugin.json` after a push to `main`, but only as a backstop: bump both in the PR so the change ships on merge. Changes outside `skills/` (CI, scripts, docs about the repo) do not need a plugin bump.
 
 ## Keeping Skills in Sync with the Kamal Docs
 
@@ -183,7 +204,7 @@ GITHUB_TOKEN=$(gh auth token) node .github/scripts/check-kamal-docs.js --mark-sy
 ```
 
 - Only mark skills you verified against the current docs. Pass `--skills`; omit it only when every skill was checked.
-- Run it after the skill edits and version bumps, and after the user has reviewed the proposed changes.
+- Run it after the skill edits and version bumps (skill and plugin, see [Versioning](#versioning)), and after the user has reviewed the proposed changes.
 - It rewrites `kamal-docs.json` and the Kamal Docs column in `VERSIONS.md`. Commit both. Never edit the `verified` entries by hand.
 - A skill whose pages changed but needed no edit still gets marked, so the report stays clean.
 

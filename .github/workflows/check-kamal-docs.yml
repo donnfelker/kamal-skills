@@ -103,6 +103,9 @@ jobs:
                "Manifest gaps" as DOCS-SYNC.md describes, by editing `kamal-docs.json` and the skills.
             3. Bump `metadata.version` in each edited SKILL.md and its row in VERSIONS.md (version and
                Last Updated), using the bump rules in DOCS-SYNC.md, and add a Recent Changes entry.
+               Then bump the plugin version to match the largest skill bump, setting the same value in
+               `metadata.version` of `.claude-plugin/marketplace.json` and `version` of
+               `.claude-plugin/plugin.json`. Installed users do not get the update without it.
             4. Run `node .github/scripts/check-kamal-docs.js --mark-synced --skills <skills you verified>`.
                Include skills whose pages changed but needed no edit.
             5. Run `./validate-skills.sh` and `node .github/scripts/check-kamal-docs.js`, and fix problems.
@@ -122,7 +125,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ steps.issue.outputs.number }}
         run: |
-          git add skills kamal-docs.json VERSIONS.md
+          git add skills kamal-docs.json VERSIONS.md .claude-plugin/marketplace.json .claude-plugin/plugin.json
           if git diff --cached --quiet; then
             echo "Claude made no changes. The drift issue stays open for a manual update." >> "$GITHUB_STEP_SUMMARY"
             exit 0
