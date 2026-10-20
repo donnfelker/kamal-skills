@@ -51,6 +51,8 @@ Work on a branch named `fix/sync-kamal-docs-<version>` (for example `fix/sync-ka
    - Patch (`1.0.1`): corrections and wording.
    - Minor (`1.1.0`): new documented commands, flags, keys, or behaviors.
    - Major (`2.0.0`): a Kamal change that breaks what the skill told users to do.
+
+   Then bump the **plugin version** to match the largest skill bump, in both `.claude-plugin/marketplace.json` (`metadata.version`) and `.claude-plugin/plugin.json` (`version`). Without it, Claude Code does not offer the update to installed users (see Versioning in [AGENTS.md](AGENTS.md)).
 6. **Mark synced** only the skills you verified:
    ```bash
    GITHUB_TOKEN=$(gh auth token) node .github/scripts/check-kamal-docs.js --mark-synced --skills deploy,proxy
