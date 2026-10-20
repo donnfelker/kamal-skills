@@ -71,6 +71,10 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.KAMAL_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
 
+      # 1Password only (see 1password.md): .kamal/secrets fetches from the vault.
+      # - name: Install the 1Password CLI
+      #   uses: 1password/install-cli-action@v4
+
       # Recreate the git-ignored files .kamal/secrets (and any hooks) read.
       # Delete this step if .kamal/secrets only reads environment variables.
       - name: Write the deploy inputs
@@ -83,6 +87,9 @@ jobs:
           printf 'POSTGRES_PASSWORD=%s\n' "$POSTGRES_PASSWORD" > .env
 
       - name: Deploy
+        # 1Password only: the token reaches this step and nothing else.
+        # env:
+        #   OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: bin/kamal deploy        # "kamal deploy" when installed with gem install
 ```
 
@@ -96,6 +103,7 @@ jobs:
 | `cancel-in-progress: false` | Killing a deploy mid-boot can leave the deploy lock held. Waiting is safer. |
 | `umask 077` | The written files are readable only by the runner user. |
 | `printf '%s'` | No trailing newline added to keys; `echo` adds one. |
+| `OP_SERVICE_ACCOUNT_TOKEN` on the Deploy step only | Earlier steps (third-party actions included) never see the token that unlocks every deploy secret. |
 
 ## Destinations
 

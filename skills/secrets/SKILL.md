@@ -2,7 +2,7 @@
 name: secrets
 description: Manage secrets for a Kamal deployment — the `.kamal/secrets` file, dotenv variable and command substitution, and the `kamal secrets` vault helpers (1Password, Bitwarden, LastPass, Bitwarden Secrets Manager, AWS Secrets Manager, Doppler, GCP Secret Manager, Passbolt). Use when the user says "kamal secrets," "where do I put my registry password," "manage secrets," "pull secrets from 1Password/Bitwarden/LastPass/Doppler," "kamal secrets fetch/extract/print," "secrets-common," "secrets.<destination>," "secrets_path," "secret vs clear env keys," "RAILS_MASTER_KEY," or "migrate from .env / kamal envify," "migrate local or file-based secrets into 1Password / a vault," or "move plaintext secret files into a password manager." Covers wiring secrets into `env.secret`/`env.clear` in deploy.yml, per-destination secrets files, and aliased secrets. For setting plain non-secret env values, see env. For registry login and KAMAL_REGISTRY_PASSWORD, see registry. For build-time secrets and args, see build.
 metadata:
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Kamal Secrets
@@ -139,19 +139,15 @@ kamal secrets extract MyVault/MyItem/REGISTRY_PASSWORD $SECRETS
 
 The `op` desktop-app integration authorizes **reads** transparently, but **writes** — creating
 a vault or item — prompt for **Touch ID / approval** and will **time out** in non-interactive,
-CI, or background contexts. For unattended deploys, authenticate with a **service account**
-instead of `--account`:
+CI, or background contexts. For unattended deploys, authenticate `op` with a 1Password
+**service account** by setting `OP_SERVICE_ACCOUNT_TOKEN` in the environment (a 1Password
+convention, not a Kamal feature). `.kamal/secrets` does not change: **keep `--account`**, since
+the `1password` adapter refuses to fetch without it (`kamal secrets fetch ... --account=ACCOUNT`).
 
-```shell
-# .kamal/secrets
-export OP_SERVICE_ACCOUNT_TOKEN=$(cat .kamal/OP_SERVICE_ACCOUNT_TOKEN)  # keep this file git-ignored
-
-SECRETS=$(kamal secrets fetch --adapter 1password \
-  --from MyVault/MyItem REGISTRY_PASSWORD DB_PASSWORD)
-```
-
-A service account only sees vaults **explicitly shared with it** — grant it read access to the
-deploy vault first, or `fetch` comes back empty.
+A service account only sees vaults **explicitly granted to it**, and 1Password does not allow
+granting the built-in Personal, Private, or Employee vault, or the default Shared vault. Grant it read access to a dedicated
+deploy vault first, or `fetch` fails. For the full GitHub Actions setup, see the **ci-deploy**
+skill's `references/1password.md`.
 
 **Field references and `extract`:** `op item create "LABEL[password]=..."` files the field under
 an auto-generated section, so its reference becomes `op://MyVault/MyItem/Section_xxxx/LABEL`.

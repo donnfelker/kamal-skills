@@ -12,7 +12,7 @@ Current versions of all skills. Agents can compare against local versions to che
 | rollback | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | servers | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | env | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
-| secrets | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
+| secrets | 1.0.1 | 2026-10-20 | 2.12.0 (`c700a5b`) |
 | registry | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | proxy | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | accessories | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
@@ -27,10 +27,15 @@ Current versions of all skills. Agents can compare against local versions to che
 | remove | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | upgrade | 1.0.0 | 2026-06-30 | 2.12.0 (`c700a5b`) |
 | server-hardening | 1.0.0 | 2026-07-06 | 2.12.0 (`c700a5b`) |
-| ci-deploy | 1.0.1 | 2026-10-12 | 2.12.0 (`c700a5b`) |
+| ci-deploy | 1.1.0 | 2026-10-20 | 2.12.0 (`c700a5b`) |
 | local-ci-deploy | 1.0.0 | 2026-10-12 | 2.12.0 (`c700a5b`) |
 
 ## Recent Changes
+
+### ci-deploy 1.1.0, secrets 1.0.1 (2026-10-20)
+
+- `ci-deploy`: added `references/1password.md` for deploys whose secrets live in 1Password. `.kamal/secrets` keeps fetching with the `1password` adapter on the laptop and the runner; the runner installs the `op` CLI and authenticates with a read-only 1Password service account, so GitHub holds one token instead of a copy of each secret. The workflow template gains the optional install step and a deploy-step-only token. Service accounts and `1password/install-cli-action` are labeled 1Password conventions.
+- `secrets`: fixed the service-account example, which dropped `--account`. The `1password` adapter refuses to fetch without it.
 
 ### kamal 1.0.0 (2026-10-12)
 
